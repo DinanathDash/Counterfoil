@@ -141,27 +141,30 @@ export const addCustomerNote = async (
     throw new AppError(404, 'NOT_FOUND', 'Customer not found');
   }
 
-  return prisma.$transaction(async (tx) => {
-    const customerNote = await tx.customerNote.create({
-      data: {
-        customerId,
-        note,
-        createdById,
-        followUpDate,
-      },
-    });
-
-    if (status || followUpDate !== undefined) {
-      const updateData: Prisma.CustomerUpdateInput = {};
-      if (status) updateData.status = status;
-      if (followUpDate !== undefined) updateData.followUpDate = followUpDate;
-
-      await tx.customer.update({
-        where: { id: customerId },
-        data: updateData,
+  return prisma.$transaction(
+    async (tx) => {
+      const customerNote = await tx.customerNote.create({
+        data: {
+          customerId,
+          note,
+          createdById,
+          followUpDate,
+        },
       });
-    }
 
-    return customerNote;
-  }, { timeout: 20000, maxWait: 15000 });
+      if (status || followUpDate !== undefined) {
+        const updateData: Prisma.CustomerUpdateInput = {};
+        if (status) updateData.status = status;
+        if (followUpDate !== undefined) updateData.followUpDate = followUpDate;
+
+        await tx.customer.update({
+          where: { id: customerId },
+          data: updateData,
+        });
+      }
+
+      return customerNote;
+    },
+    { timeout: 20000, maxWait: 15000 },
+  );
 };

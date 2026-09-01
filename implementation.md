@@ -923,3 +923,4 @@ Verify each against the deployed app before submitting.
 **API quality** — [ ] input validation on every write · [ ] correct HTTP status codes · [ ] consistent error envelope · [ ] pagination on all lists · [ ] search/filter where needed
 
 **Delivery** — [ ] GitHub repo with meaningful commit history · [ ] live frontend URL · [ ] live backend URL · [ ] credentials for all four roles · [ ] Postman collection · [ ] README with setup and deployment · [ ] architecture explanation · [ ] known limitations documented
+```

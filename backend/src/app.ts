@@ -7,7 +7,6 @@ import { errorHandler } from './middleware/errorHandler';
 import { notFound } from './middleware/notFound';
 import apiRoutes from './routes';
 
-
 const app = express();
 
 app.use(helmet());

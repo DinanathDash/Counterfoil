@@ -18,5 +18,5 @@ export default tseslint.config(
   },
   {
     ignores: ['dist/**', 'node_modules/**', 'prisma/**', 'eslint.config.mjs', 'prisma.config.ts'],
-  }
+  },
 );

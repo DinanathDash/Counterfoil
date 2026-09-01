@@ -50,9 +50,13 @@ export default function LoginPage() {
       login(response.data.user, response.data.accessToken);
 
       router.push("/");
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as {
+        response?: { data?: { error?: { message?: string } } };
+      };
       setError(
-        err.response?.data?.error?.message || "Login failed. Please try again.",
+        error.response?.data?.error?.message ||
+          "Login failed. Please try again.",
       );
     } finally {
       setLoading(false);

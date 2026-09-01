@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { User, Role } from "@/types/api";
+import { User } from "@/types/api";
 
 interface AuthState {
   user: User | null;
@@ -25,6 +25,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     set({ user: null, token: null, isAuthenticated: false });
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.href = "/login";
   },
 
@@ -41,7 +42,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       } else {
         set({ user: null, token: null, isAuthenticated: false });
       }
-    } catch (e) {
+    } catch {
       set({ user: null, token: null, isAuthenticated: false });
     }
   },

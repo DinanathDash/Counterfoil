@@ -9,6 +9,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     initialize();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true);
   }, [initialize]);
 

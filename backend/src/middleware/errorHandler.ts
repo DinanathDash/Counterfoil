@@ -2,7 +2,12 @@ import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 import { AppError } from '../utils/AppError';
 
-export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+export const errorHandler = (
+  err: Error,
+  req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
   if (err instanceof ZodError) {
     return res.status(400).json({
       error: {
@@ -23,7 +28,7 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
     });
   }
 
-  if ((err as any).code === 'P2002') {
+  if ((err as { code?: string }).code === 'P2002') {
     return res.status(409).json({
       error: {
         code: 'CONFLICT',
@@ -32,7 +37,7 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
     });
   }
 
-  if ((err as any).code === 'P2025') {
+  if ((err as { code?: string }).code === 'P2025') {
     return res.status(404).json({
       error: {
         code: 'NOT_FOUND',

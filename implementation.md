@@ -50,7 +50,6 @@ erp-crm-portal/
 │   ├── architecture.md
 │   ├── deployment.md
 │   └── postman_collection.json
-├── docker-compose.yml          # bonus
 ├── .github/workflows/ci.yml    # bonus
 └── README.md
 ```
@@ -816,12 +815,8 @@ git clone <repo> && cd erp-crm-portal
 cd backend && cp .env.example .env && npm install
 npx prisma migrate dev && npx prisma db seed
 npm run dev                       # http://localhost:4000
-# Frontend (new terminal)
 cd ../frontend && cp .env.example .env && npm install
 npm run dev                       # http://localhost:3000
-```
-
-With Docker: `docker compose up -d` starts Postgres, backend and frontend.
 
 ---
 

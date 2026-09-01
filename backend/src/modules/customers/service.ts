@@ -163,5 +163,5 @@ export const addCustomerNote = async (
     }
 
     return customerNote;
-  });
+  }, { timeout: 20000, maxWait: 15000 });
 };

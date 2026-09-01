@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import pinoHttp from 'pino-http';
+import { rateLimit } from 'express-rate-limit';
 import { env } from './config/env';
 import { errorHandler } from './middleware/errorHandler';
 import { notFound } from './middleware/notFound';
@@ -22,6 +23,17 @@ app.use(
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', uptime: process.uptime() });
 });
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+});
+
+if (process.env.NODE_ENV !== 'test') {
+  app.use('/api/auth/login', limiter);
+}
 
 app.use('/api', apiRoutes);
 

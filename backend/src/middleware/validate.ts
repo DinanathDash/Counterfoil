@@ -11,11 +11,9 @@ export const validate = (schema: ZodObject<any, any>) => {
         params: req.params,
       });
 
-      req.body = parsed.body;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      req.query = parsed.query as any;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      req.params = parsed.params as any;
+      if (parsed.body !== undefined) req.body = parsed.body;
+      if (parsed.query !== undefined) Object.assign(req.query, parsed.query);
+      if (parsed.params !== undefined) Object.assign(req.params, parsed.params);
 
       next();
     } catch (error) {

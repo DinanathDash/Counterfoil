@@ -91,88 +91,91 @@ export const createChallan = async (
   notes?: string,
   requestedStatus: ChallanStatus = ChallanStatus.DRAFT,
 ) => {
-  return prisma.$transaction(async (tx) => {
-    // 1. Fetch customer to snapshot
-    const customer = await tx.customer.findUnique({ where: { id: customerId } });
-    if (!customer || customer.deletedAt) {
-      throw new AppError(404, 'NOT_FOUND', 'Customer not found or deleted');
-    }
+  return prisma.$transaction(
+    async (tx) => {
+      // 1. Fetch customer to snapshot
+      const customer = await tx.customer.findUnique({ where: { id: customerId } });
+      if (!customer || customer.deletedAt) {
+        throw new AppError(404, 'NOT_FOUND', 'Customer not found or deleted');
+      }
 
-    const customerSnapshot = {
-      name: customer.name,
-      mobile: customer.mobile,
-      email: customer.email,
-      businessName: customer.businessName,
-      gstNumber: customer.gstNumber,
-      address: customer.address,
-    };
-
-    // 2. Fetch products to snapshot and calculate totals
-    const productIds = itemsPayload.map((i) => i.productId);
-    const products = await tx.product.findMany({
-      where: { id: { in: productIds }, deletedAt: null, isActive: true },
-    });
-
-    if (products.length !== productIds.length) {
-      throw new AppError(
-        400,
-        'BAD_REQUEST',
-        'One or more products are invalid, inactive, or deleted',
-      );
-    }
-
-    const productMap = new Map(products.map((p) => [p.id, p]));
-
-    let totalAmount = new Prisma.Decimal(0);
-    let totalQuantity = 0;
-
-    const challanItemsData = itemsPayload.map((item) => {
-      const product = productMap.get(item.productId)!;
-      const lineTotal = product.unitPrice.mul(item.quantity);
-
-      totalAmount = totalAmount.add(lineTotal);
-      totalQuantity += item.quantity;
-
-      return {
-        productId: product.id,
-        productName: product.name,
-        sku: product.sku,
-        category: product.category,
-        unitPrice: product.unitPrice,
-        quantity: item.quantity,
-        lineTotal,
+      const customerSnapshot = {
+        name: customer.name,
+        mobile: customer.mobile,
+        email: customer.email,
+        businessName: customer.businessName,
+        gstNumber: customer.gstNumber,
+        address: customer.address,
       };
-    });
 
-    // 3. Generate Challan Number
-    const challanNumber = await generateChallanNumber(tx);
+      // 2. Fetch products to snapshot and calculate totals
+      const productIds = itemsPayload.map((i) => i.productId);
+      const products = await tx.product.findMany({
+        where: { id: { in: productIds }, deletedAt: null, isActive: true },
+      });
 
-    // 4. Create Challan in DRAFT mode first
-    const challan = await tx.challan.create({
-      data: {
-        challanNumber,
-        customerId,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        customerSnapshot: customerSnapshot as any,
-        status: ChallanStatus.DRAFT,
-        totalQuantity,
-        totalAmount,
-        notes,
-        createdById: userId,
-        items: {
-          create: challanItemsData,
+      if (products.length !== productIds.length) {
+        throw new AppError(
+          400,
+          'BAD_REQUEST',
+          'One or more products are invalid, inactive, or deleted',
+        );
+      }
+
+      const productMap = new Map(products.map((p) => [p.id, p]));
+
+      let totalAmount = new Prisma.Decimal(0);
+      let totalQuantity = 0;
+
+      const challanItemsData = itemsPayload.map((item) => {
+        const product = productMap.get(item.productId)!;
+        const lineTotal = product.unitPrice.mul(item.quantity);
+
+        totalAmount = totalAmount.add(lineTotal);
+        totalQuantity += item.quantity;
+
+        return {
+          productId: product.id,
+          productName: product.name,
+          sku: product.sku,
+          category: product.category,
+          unitPrice: product.unitPrice,
+          quantity: item.quantity,
+          lineTotal,
+        };
+      });
+
+      // 3. Generate Challan Number
+      const challanNumber = await generateChallanNumber(tx);
+
+      // 4. Create Challan in DRAFT mode first
+      const challan = await tx.challan.create({
+        data: {
+          challanNumber,
+          customerId,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          customerSnapshot: customerSnapshot as any,
+          status: ChallanStatus.DRAFT,
+          totalQuantity,
+          totalAmount,
+          notes,
+          createdById: userId,
+          items: {
+            create: challanItemsData,
+          },
         },
-      },
-      include: { items: true },
-    });
+        include: { items: true },
+      });
 
-    // 5. If requested status is CONFIRMED, perform confirmation logic
-    if (requestedStatus === ChallanStatus.CONFIRMED) {
-      return await internalConfirmChallan(tx, challan.id, userId);
-    }
+      // 5. If requested status is CONFIRMED, perform confirmation logic
+      if (requestedStatus === ChallanStatus.CONFIRMED) {
+        return await internalConfirmChallan(tx, challan.id, userId);
+      }
 
-    return challan;
-  });
+      return challan;
+    },
+    { timeout: 20000, maxWait: 15000 },
+  );
 };
 
 export const updateChallan = async (
@@ -304,56 +307,62 @@ const internalConfirmChallan = async (tx: Prisma.TransactionClient, id: string, 
 };
 
 export const confirmChallan = async (id: string, userId: string) => {
-  return prisma.$transaction((tx) => internalConfirmChallan(tx, id, userId));
+  return prisma.$transaction((tx) => internalConfirmChallan(tx, id, userId), {
+    timeout: 20000,
+    maxWait: 15000,
+  });
 };
 
 export const cancelChallan = async (id: string, userId: string) => {
-  return prisma.$transaction(async (tx) => {
-    const challan = await tx.challan.findUnique({
-      where: { id },
-      include: { items: true },
-    });
+  return prisma.$transaction(
+    async (tx) => {
+      const challan = await tx.challan.findUnique({
+        where: { id },
+        include: { items: true },
+      });
 
-    if (!challan) throw new AppError(404, 'NOT_FOUND', 'Challan not found');
-    if (challan.status === ChallanStatus.CANCELLED) {
-      throw new AppError(400, 'BAD_REQUEST', 'Challan is already cancelled');
-    }
+      if (!challan) throw new AppError(404, 'NOT_FOUND', 'Challan not found');
+      if (challan.status === ChallanStatus.CANCELLED) {
+        throw new AppError(400, 'BAD_REQUEST', 'Challan is already cancelled');
+      }
 
-    if (challan.status === ChallanStatus.CONFIRMED) {
-      // Restore stock
-      for (const item of challan.items) {
-        const product = await tx.product.findUnique({ where: { id: item.productId } });
-        if (product) {
-          const balanceAfter = product.currentStock + item.quantity;
+      if (challan.status === ChallanStatus.CONFIRMED) {
+        // Restore stock
+        for (const item of challan.items) {
+          const product = await tx.product.findUnique({ where: { id: item.productId } });
+          if (product) {
+            const balanceAfter = product.currentStock + item.quantity;
 
-          await tx.product.update({
-            where: { id: product.id },
-            data: { currentStock: balanceAfter },
-          });
+            await tx.product.update({
+              where: { id: product.id },
+              data: { currentStock: balanceAfter },
+            });
 
-          await tx.stockMovement.create({
-            data: {
-              productId: product.id,
-              quantity: item.quantity,
-              type: 'IN',
-              reason: `Challan Cancelled: ${challan.challanNumber}`,
-              referenceType: 'CHALLAN_CANCEL',
-              referenceId: challan.id,
-              balanceAfter,
-              createdById: userId,
-            },
-          });
+            await tx.stockMovement.create({
+              data: {
+                productId: product.id,
+                quantity: item.quantity,
+                type: 'IN',
+                reason: `Challan Cancelled: ${challan.challanNumber}`,
+                referenceType: 'CHALLAN_CANCEL',
+                referenceId: challan.id,
+                balanceAfter,
+                createdById: userId,
+              },
+            });
+          }
         }
       }
-    }
 
-    return tx.challan.update({
-      where: { id },
-      data: {
-        status: ChallanStatus.CANCELLED,
-        cancelledAt: new Date(),
-      },
-      include: { items: true },
-    });
-  });
+      return tx.challan.update({
+        where: { id },
+        data: {
+          status: ChallanStatus.CANCELLED,
+          cancelledAt: new Date(),
+        },
+        include: { items: true },
+      });
+    },
+    { timeout: 20000, maxWait: 15000 },
+  );
 };

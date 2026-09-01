@@ -5,6 +5,8 @@ import pinoHttp from 'pino-http';
 import { env } from './config/env';
 import { errorHandler } from './middleware/errorHandler';
 import { notFound } from './middleware/notFound';
+import apiRoutes from './routes';
+
 
 const app = express();
 
@@ -22,7 +24,7 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', uptime: process.uptime() });
 });
 
-// app.use('/api', routes); // To be added later
+app.use('/api', apiRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

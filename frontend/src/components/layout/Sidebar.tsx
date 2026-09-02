@@ -19,6 +19,7 @@ import {
   ClipboardList,
   Folder,
   ChevronDown,
+  type LucideIcon,
 } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useSidebarStore } from "@/store/useSidebarStore";
@@ -33,7 +34,7 @@ import {
 type NavItem = {
   title: string;
   href?: string;
-  icon: any;
+  icon: LucideIcon;
   badge?: number;
   isDummy?: boolean;
   children?: { title: string; href: string; isDummy?: boolean }[];
@@ -80,7 +81,13 @@ const navGroups: NavGroup[] = [
   {
     label: "Work",
     items: [
-      { title: "Tasks", href: "#", icon: ClipboardList, badge: 1, isDummy: true },
+      {
+        title: "Tasks",
+        href: "#",
+        icon: ClipboardList,
+        badge: 1,
+        isDummy: true,
+      },
       { title: "Files", href: "#", icon: Folder, isDummy: true },
     ],
   },
@@ -135,8 +142,8 @@ export function Sidebar() {
   return (
     <div
       className={cn(
-        "bg-surface border-r border-line h-screen flex flex-col fixed left-0 top-0 overflow-hidden transition-all duration-300 z-50",
-        isCollapsed ? "w-[80px]" : "w-[280px]"
+        "bg-canvas h-screen flex flex-col fixed left-0 top-0 overflow-hidden transition-all duration-300 z-50",
+        isCollapsed ? "w-[80px]" : "w-[280px]",
       )}
     >
       {/* Brand Header */}
@@ -193,7 +200,9 @@ export function Sidebar() {
               {group.items.map((item) => {
                 const isParentActive =
                   item.href === pathname ||
-                  (item.href && item.href !== "/" && pathname.startsWith(item.href)) ||
+                  (item.href &&
+                    item.href !== "/" &&
+                    pathname.startsWith(item.href)) ||
                   item.children?.some((child) => child.href === pathname);
 
                 const Icon = item.icon;
@@ -203,8 +212,8 @@ export function Sidebar() {
                 const tooltipText = item.isDummy
                   ? "This is a dummy element."
                   : isCollapsed
-                  ? item.title
-                  : undefined;
+                    ? item.title
+                    : undefined;
                 const showTooltip = item.isDummy || isCollapsed;
 
                 return (
@@ -221,25 +230,27 @@ export function Sidebar() {
                             isCollapsed
                               ? "justify-center px-0 py-2.5"
                               : "justify-between px-3 py-2.5",
-                            "text-muted-foreground hover:bg-canvas hover:text-ink"
+                            "text-muted-foreground hover:bg-canvas hover:text-ink",
                           )}
                         >
                           <div className="flex items-center">
                             <Icon
                               className={cn(
                                 "h-4 w-4 shrink-0 transition-colors text-muted-foreground group-hover:text-ink",
-                                !isCollapsed && "mr-3"
+                                !isCollapsed && "mr-3",
                               )}
                             />
                             {!isCollapsed && (
-                              <span className="whitespace-nowrap">{item.title}</span>
+                              <span className="whitespace-nowrap">
+                                {item.title}
+                              </span>
                             )}
                           </div>
                           {!isCollapsed && (
                             <ChevronDown
                               className={cn(
                                 "w-4 h-4 transition-transform",
-                                isExpanded ? "rotate-180" : ""
+                                isExpanded ? "rotate-180" : "",
                               )}
                             />
                           )}
@@ -259,7 +270,7 @@ export function Sidebar() {
                               : "justify-between px-3 py-2.5",
                             isParentActive
                               ? "bg-ink text-white shadow-sm"
-                              : "text-muted-foreground hover:bg-canvas hover:text-ink"
+                              : "text-muted-foreground hover:bg-canvas hover:text-ink",
                           )}
                         >
                           <div className="flex items-center">
@@ -269,11 +280,13 @@ export function Sidebar() {
                                 !isCollapsed && "mr-3",
                                 isParentActive
                                   ? "text-white"
-                                  : "text-muted-foreground group-hover:text-ink"
+                                  : "text-muted-foreground group-hover:text-ink",
                               )}
                             />
                             {!isCollapsed && (
-                              <span className="whitespace-nowrap">{item.title}</span>
+                              <span className="whitespace-nowrap">
+                                {item.title}
+                              </span>
                             )}
                           </div>
                           {!isCollapsed && item.badge && (
@@ -305,7 +318,7 @@ export function Sidebar() {
                                   "w-full block px-3 py-2 rounded-lg text-[13px] font-medium transition-all",
                                   isChildActive
                                     ? "bg-ink text-white shadow-sm"
-                                    : "text-muted-foreground hover:text-ink hover:bg-canvas"
+                                    : "text-muted-foreground hover:text-ink hover:bg-canvas",
                                 )}
                               >
                                 {child.title}
@@ -331,12 +344,16 @@ export function Sidebar() {
             const tooltipText = item.isDummy
               ? "This is a dummy element."
               : isCollapsed
-              ? item.title
-              : undefined;
+                ? item.title
+                : undefined;
             const showTooltip = item.isDummy || isCollapsed;
 
             return (
-              <SidebarTooltip key={item.title} show={showTooltip} text={tooltipText}>
+              <SidebarTooltip
+                key={item.title}
+                show={showTooltip}
+                text={tooltipText}
+              >
                 <Link
                   href={item.href}
                   onClick={(e) => {
@@ -344,16 +361,18 @@ export function Sidebar() {
                   }}
                   className={cn(
                     "w-full flex items-center rounded-lg text-[13px] font-medium text-muted-foreground hover:bg-canvas hover:text-ink transition-all group",
-                    isCollapsed ? "justify-center px-0 py-2.5" : "px-3 py-2.5"
+                    isCollapsed ? "justify-center px-0 py-2.5" : "px-3 py-2.5",
                   )}
                 >
                   <Icon
                     className={cn(
                       "h-4 w-4 shrink-0 text-muted-foreground group-hover:text-ink transition-colors",
-                      !isCollapsed && "mr-3"
+                      !isCollapsed && "mr-3",
                     )}
                   />
-                  {!isCollapsed && <span className="whitespace-nowrap">{item.title}</span>}
+                  {!isCollapsed && (
+                    <span className="whitespace-nowrap">{item.title}</span>
+                  )}
                 </Link>
               </SidebarTooltip>
             );
@@ -366,7 +385,7 @@ export function Sidebar() {
         <div
           className={cn(
             "w-full flex items-center p-2 rounded-xl hover:bg-canvas transition-colors cursor-pointer group",
-            isCollapsed ? "justify-center" : "justify-between"
+            isCollapsed ? "justify-center" : "justify-between",
           )}
         >
           <div className="flex items-center gap-3">

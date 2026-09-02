@@ -235,7 +235,8 @@ export function ChallanForm({ initialData, isEdit }: ChallanFormProps) {
               }
             >
               {customerId
-                ? customers.find((customer) => customer.id === customerId)?.name || "Unknown Customer"
+                ? customers.find((customer) => customer.id === customerId)
+                    ?.name || "Unknown Customer"
                 : "Select customer..."}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </PopoverTrigger>

@@ -119,9 +119,7 @@ export default function LoginPage() {
               <Button
                 variant="outline"
                 type="button"
-                onClick={() =>
-                  fillDummy("admin@erp.test", "Password@123")
-                }
+                onClick={() => fillDummy("admin@erp.test", "Password@123")}
                 className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors flex items-center justify-center gap-2"
                 title="Admin Account"
               >
@@ -131,9 +129,7 @@ export default function LoginPage() {
               <Button
                 variant="outline"
                 type="button"
-                onClick={() =>
-                  fillDummy("sales@erp.test", "Password@123")
-                }
+                onClick={() => fillDummy("sales@erp.test", "Password@123")}
                 className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors flex items-center justify-center gap-2"
                 title="Sales Account"
               >
@@ -143,9 +139,7 @@ export default function LoginPage() {
               <Button
                 variant="outline"
                 type="button"
-                onClick={() =>
-                  fillDummy("warehouse@erp.test", "Password@123")
-                }
+                onClick={() => fillDummy("warehouse@erp.test", "Password@123")}
                 className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors flex items-center justify-center gap-2"
                 title="Warehouse Account"
               >
@@ -155,9 +149,7 @@ export default function LoginPage() {
               <Button
                 variant="outline"
                 type="button"
-                onClick={() =>
-                  fillDummy("accounts@erp.test", "Password@123")
-                }
+                onClick={() => fillDummy("accounts@erp.test", "Password@123")}
                 className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors flex items-center justify-center gap-2"
                 title="Accounts Account"
               >

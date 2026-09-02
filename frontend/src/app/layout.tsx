@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import { AuthProvider } from "@/auth/AuthProvider";
 import { Toaster } from "@/components/ui/toast";
 import { ReactQueryProvider } from "@/lib/queryClient";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Counterfoil ERP",
@@ -19,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={GeistSans.className}>
         <ReactQueryProvider>
           <AuthProvider>
             {children}

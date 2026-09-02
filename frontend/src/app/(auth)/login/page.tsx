@@ -27,8 +27,6 @@ import {
   Shield,
   Briefcase,
   Zap,
-  ArrowRight,
-  Activity,
   Command,
 } from "lucide-react";
 import Image from "next/image";
@@ -84,11 +82,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex w-full">
+    <div className="flex w-full min-h-screen">
       {/* Left Panel */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-between p-6 sm:p-12 xl:p-16 bg-white min-h-screen">
+      <div className="relative w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 xl:p-16 bg-white">
         {/* Header Logo */}
-        <div>
+        <div className="absolute top-8 left-8 sm:top-8 sm:left-8">
           <div className="flex items-center gap-2 font-bold text-xl text-ink">
             <Command className="w-6 h-6" />
             Counterfoil
@@ -96,10 +94,15 @@ export default function LoginPage() {
         </div>
 
         {/* Form Container */}
-        <div className="w-full max-w-sm mx-auto flex-1 flex flex-col justify-center my-12">
-          <div className="text-center mb-8">
-            <div className="w-[72px] h-[72px] bg-neutral-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-neutral-100/60 ring-8 ring-neutral-50/50">
-              <User className="w-8 h-8 text-muted-foreground" />
+        <div className="w-full max-w-sm mx-auto">
+          <div className="text-center mb-8 mt-16 sm:mt-0">
+            <div className="relative w-[120px] h-[120px] mx-auto mb-6 flex items-center justify-center">
+              {/* Outer faint circle */}
+              <div className="absolute inset-0 bg-neutral-50/80 rounded-full"></div>
+              {/* Inner circle */}
+              <div className="relative w-[72px] h-[72px] bg-white rounded-full flex items-center justify-center shadow-sm border border-neutral-100/80">
+                <User className="w-8 h-8 text-ink" />
+              </div>
             </div>
             <h1 className="text-2xl font-semibold text-ink mb-2">
               Login to your account
@@ -111,17 +114,18 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Dummy Login Quick Buttons */}
-            <div className="grid grid-cols-4 gap-3 mb-2">
+            <div className="grid grid-cols-2 gap-3 mb-2">
               <Button
                 variant="outline"
                 type="button"
                 onClick={() =>
                   fillDummy("admin@counterfoil.app", "Password@123")
                 }
-                className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors"
+                className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors flex items-center justify-center gap-2"
                 title="Admin Account"
               >
                 <Shield className="w-4 h-4" />
+                <span className="text-sm font-medium">Admin</span>
               </Button>
               <Button
                 variant="outline"
@@ -129,10 +133,11 @@ export default function LoginPage() {
                 onClick={() =>
                   fillDummy("manager@counterfoil.app", "Password@123")
                 }
-                className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors"
+                className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors flex items-center justify-center gap-2"
                 title="Manager Account"
               >
                 <Briefcase className="w-4 h-4" />
+                <span className="text-sm font-medium">Manager</span>
               </Button>
               <Button
                 variant="outline"
@@ -140,10 +145,11 @@ export default function LoginPage() {
                 onClick={() =>
                   fillDummy("user@counterfoil.app", "Password@123")
                 }
-                className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors"
+                className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors flex items-center justify-center gap-2"
                 title="Standard User"
               >
                 <User className="w-4 h-4" />
+                <span className="text-sm font-medium">User</span>
               </Button>
               <Button
                 variant="outline"
@@ -151,10 +157,11 @@ export default function LoginPage() {
                 onClick={() =>
                   fillDummy("demo@counterfoil.app", "Password@123")
                 }
-                className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors"
+                className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors flex items-center justify-center gap-2"
                 title="Demo Guest"
               >
                 <Zap className="w-4 h-4" />
+                <span className="text-sm font-medium">Guest</span>
               </Button>
             </div>
 
@@ -217,7 +224,7 @@ export default function LoginPage() {
                     type="button"
                     variant="ghost"
                     size="icon-xs"
-                    className="text-muted-foreground hover:text-ink h-8 w-8"
+                    className="text-muted-foreground hover:text-ink hover:bg-transparent h-8 w-8"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff /> : <Eye />}
@@ -266,8 +273,8 @@ export default function LoginPage() {
 
       {/* Right Panel (Hidden on mobile) */}
       <div className="hidden lg:flex w-1/2 bg-[#f9fafb] relative items-center justify-center p-16 overflow-hidden border-l border-neutral-100">
-        {/* Subtle grid background */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+        {/* Subtle grid background around main content */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_20%,transparent_100%)]"></div>
 
         {/* Glowing orb effect */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white rounded-full blur-[100px] opacity-60"></div>
@@ -275,7 +282,7 @@ export default function LoginPage() {
         <div className="relative z-10 max-w-lg w-full">
           <div className="mb-8">
             <Image
-              src="https://i.pravatar.cc/150?img=24"
+              src="https://i.pravatar.cc/150?img=52"
               alt="Wei Chen"
               width={48}
               height={48}
@@ -292,7 +299,7 @@ export default function LoginPage() {
           </h2>
 
           <div>
-            <p className="font-semibold text-ink text-[15px]">Sarah Jenkins</p>
+            <p className="font-semibold text-ink text-[15px]">Smith Jenkins</p>
             <p className="text-muted-foreground text-sm">Operations Director</p>
           </div>
 

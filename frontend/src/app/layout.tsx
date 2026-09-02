@@ -6,6 +6,8 @@ import { Toaster } from "@/components/ui/toast";
 import { ReactQueryProvider } from "@/lib/queryClient";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
+import { FreeTierNotification } from "@/components/layout/FreeTierNotification";
+
 export const metadata: Metadata = {
   title: "Counterfoil ERP",
   description: "Operations tool",
@@ -24,6 +26,7 @@ export default function RootLayout({
             <TooltipProvider delay={100}>
               {children}
               <Toaster />
+              <FreeTierNotification />
             </TooltipProvider>
           </AuthProvider>
         </ReactQueryProvider>

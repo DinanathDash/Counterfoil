@@ -90,9 +90,18 @@ export interface Challan {
   updatedAt: string;
   confirmedAt: string | null;
   cancelledAt: string | null;
-  customerName: string | null;
-  customerBusiness: string | null;
+  customerSnapshot?: {
+    name: string;
+    businessName: string | null;
+    email: string | null;
+    mobile: string | null;
+    gstNumber: string | null;
+    address: string | null;
+  };
   items: ChallanItem[];
+  _count?: {
+    items: number;
+  };
 }
 
 export interface StockMovement {

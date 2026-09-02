@@ -11,6 +11,7 @@ import { AuthResponse } from "@/types/api";
 
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   InputGroup,
   InputGroupAddon,
@@ -233,11 +234,7 @@ export default function LoginPage() {
 
             <div className="flex items-center justify-between pt-1 pb-4">
               <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="keepLogged"
-                  className="w-4 h-4 rounded border-neutral-300 text-ink focus:ring-ink focus:ring-offset-0 transition-colors"
-                />
+                <Checkbox id="keepLogged" />
                 <Label
                   htmlFor="keepLogged"
                   className="text-sm font-normal cursor-pointer"

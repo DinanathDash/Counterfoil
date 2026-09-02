@@ -14,6 +14,16 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Table,
   TableBody,
   TableCell,
@@ -31,6 +41,8 @@ export default function ChallanDetailPage() {
 
   const [isConfirming, setIsConfirming] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
 
   const {
     data: challan,
@@ -93,26 +105,24 @@ export default function ChallanDetailPage() {
     },
   });
 
+  const executeConfirm = () => {
+    setIsConfirming(true);
+    confirmMutation.mutate();
+    setIsConfirmDialogOpen(false);
+  };
+
   const handleConfirm = () => {
-    if (
-      confirm(
-        "Are you sure you want to confirm this challan? This will deduct stock and cannot be easily undone.",
-      )
-    ) {
-      setIsConfirming(true);
-      confirmMutation.mutate();
-    }
+    setIsConfirmDialogOpen(true);
+  };
+
+  const executeCancel = () => {
+    setIsCancelling(true);
+    cancelMutation.mutate();
+    setIsCancelDialogOpen(false);
   };
 
   const handleCancel = () => {
-    if (
-      confirm(
-        "Are you sure you want to cancel this challan? This will restore any deducted stock.",
-      )
-    ) {
-      setIsCancelling(true);
-      cancelMutation.mutate();
-    }
+    setIsCancelDialogOpen(true);
   };
 
   const handleDownloadPDF = () => {
@@ -171,7 +181,7 @@ export default function ChallanDetailPage() {
               className: "rounded-[10px]",
             })}
           >
-            <ArrowLeft className="h-5 w-5" strokeWidth={1} />
+            <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
             <h1 className="text-2xl font-bold text-ink flex items-center gap-3">
@@ -210,7 +220,7 @@ export default function ChallanDetailPage() {
                 variant="outline"
                 className="rounded-[10px] h-9 shadow-sm border-[0.5px] border-border/50"
               >
-                <Edit className="h-4 w-4 mr-2" strokeWidth={1} /> Edit draft
+                <Edit className="h-4 w-4 mr-2" /> Edit draft
               </Button>
             </Link>
           )}
@@ -220,8 +230,7 @@ export default function ChallanDetailPage() {
               disabled={isConfirming}
               className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-[10px] h-9 shadow-sm"
             >
-              <CheckCircle2 className="h-4 w-4 mr-2" strokeWidth={1} /> Confirm
-              & issue
+              <CheckCircle2 className="h-4 w-4 mr-2" /> Confirm & issue
             </Button>
           )}
           {canCancelUser && !isCancelled && (
@@ -231,7 +240,7 @@ export default function ChallanDetailPage() {
               disabled={isCancelling}
               className="rounded-[10px] h-9 shadow-sm"
             >
-              <Trash2 className="h-4 w-4 mr-2" strokeWidth={1} /> Cancel challan
+              <Trash2 className="h-4 w-4 mr-2" /> Cancel challan
             </Button>
           )}
           <Button
@@ -239,7 +248,7 @@ export default function ChallanDetailPage() {
             onClick={handleDownloadPDF}
             className="rounded-[10px] h-9 shadow-sm border-[0.5px] border-border/50"
           >
-            <Download className="h-4 w-4 mr-2" strokeWidth={1} /> Download PDF
+            <Download className="h-4 w-4 mr-2" /> Download PDF
           </Button>
         </div>
       </div>
@@ -253,11 +262,11 @@ export default function ChallanDetailPage() {
                 Billed To
               </h2>
               <p className="font-bold text-lg text-ink">
-                {challan.customerName}
+                {challan.customerSnapshot?.name || "Unknown"}
               </p>
-              {challan.customerBusiness && (
+              {challan.customerSnapshot?.businessName && (
                 <p className="text-[13px] leading-tight text-muted-foreground">
-                  {challan.customerBusiness}
+                  {challan.customerSnapshot.businessName}
                 </p>
               )}
             </div>
@@ -353,6 +362,58 @@ export default function ChallanDetailPage() {
           </div>
         )}
       </Card>
+
+      <AlertDialog
+        open={isConfirmDialogOpen}
+        onOpenChange={setIsConfirmDialogOpen}
+      >
+        <AlertDialogContent className="rounded-[12px]">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Challan?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to confirm this challan? This will deduct
+              stock from your inventory and cannot be easily undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-[10px]">
+              Go Back
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={executeConfirm}
+              className="rounded-[10px] bg-emerald-600 text-white hover:bg-emerald-700"
+            >
+              Confirm & Issue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={isCancelDialogOpen}
+        onOpenChange={setIsCancelDialogOpen}
+      >
+        <AlertDialogContent className="rounded-[12px]">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Cancel Challan?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to cancel this challan? This will restore
+              any deducted stock to your inventory.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-[10px]">
+              Go Back
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={executeCancel}
+              className="rounded-[10px] bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Yes, Cancel Challan
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

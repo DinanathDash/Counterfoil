@@ -109,3 +109,4 @@ For a deeper dive into the system:
 - The UI does not support restoring soft-deleted records (must be done via raw DB).
 - No audit trail for entity changes outside of Inventory Stock Movements.
 - Assumes INR currency and single company tenant.
+- Currently the UI does not support mobile view, for better exprience use desktop only.

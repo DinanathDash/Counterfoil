@@ -114,7 +114,7 @@ export default function ChallanListPage() {
         {canCreate && (
           <Link href="/challans/new">
             <Button className="rounded-[10px] h-9 shadow-sm">
-              <Plus className="mr-2 h-4 w-4" strokeWidth={1} /> Create challan
+              <Plus className="mr-2 h-4 w-4" /> Create challan
             </Button>
           </Link>
         )}
@@ -122,10 +122,7 @@ export default function ChallanListPage() {
 
       <div className="flex flex-col sm:flex-row gap-4 items-center bg-card p-4 shadow-sm border-[0.5px] border-border/50 rounded-2xl">
         <div className="relative w-full sm:w-80">
-          <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
-            strokeWidth={1}
-          />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search by Challan # or Customer..."
             value={searchTerm}
@@ -145,7 +142,7 @@ export default function ChallanListPage() {
               setPage(1);
             }}
           >
-            <SelectTrigger className="h-9 rounded-[10px] shadow-sm border-[0.5px] border-border/50">
+            <SelectTrigger className="w-[150px] h-9 rounded-[10px] shadow-sm border-[0.5px] border-border/50">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent className="rounded-[10px]">
@@ -218,10 +215,7 @@ export default function ChallanListPage() {
                   colSpan={7}
                   className="text-center py-10 text-muted-foreground"
                 >
-                  <FileText
-                    className="h-10 w-10 mx-auto text-muted-foreground/30 mb-3"
-                    strokeWidth={1}
-                  />
+                  <FileText className="h-10 w-10 mx-auto text-muted-foreground/30 mb-3" />
                   <span className="text-[13px] leading-tight">
                     No challans found matching your criteria.
                   </span>
@@ -245,16 +239,16 @@ export default function ChallanListPage() {
                   </TableCell>
                   <TableCell>
                     <div className="font-medium text-ink text-[13px] leading-tight">
-                      {challan.customerName || "Unknown"}
+                      {challan.customerSnapshot?.name || "Unknown"}
                     </div>
-                    {challan.customerBusiness && (
+                    {challan.customerSnapshot?.businessName && (
                       <div className="text-xs text-muted-foreground leading-tight mt-0.5">
-                        {challan.customerBusiness}
+                        {challan.customerSnapshot.businessName}
                       </div>
                     )}
                   </TableCell>
                   <TableCell className="text-right text-[13px] leading-tight">
-                    {challan.items?.length || 0}
+                    {challan._count?.items ?? challan.items?.length ?? 0}
                   </TableCell>
                   <TableCell className="text-right font-medium text-[13px] leading-tight">
                     ₹{parseFloat(challan.totalAmount).toFixed(2)}

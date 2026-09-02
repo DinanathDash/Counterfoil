@@ -40,6 +40,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { MoreHorizontal, Plus, AlertCircle, Search } from "lucide-react";
 
 export default function ProductListPage() {
@@ -59,6 +69,7 @@ export default function ProductListPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isAdjustOpen, setIsAdjustOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [productToDelete, setProductToDelete] = useState<string | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: [
@@ -96,9 +107,10 @@ export default function ProductListPage() {
     },
   });
 
-  const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this product?")) {
-      deleteMutation.mutate(id);
+  const confirmDelete = () => {
+    if (productToDelete) {
+      deleteMutation.mutate(productToDelete);
+      setProductToDelete(null);
     }
   };
 
@@ -133,17 +145,14 @@ export default function ProductListPage() {
             onClick={openCreateModal}
             className="rounded-[10px] h-9 shadow-sm"
           >
-            <Plus className="mr-2 h-4 w-4" strokeWidth={1} /> Add product
+            <Plus className="mr-2 h-4 w-4" /> Add product
           </Button>
         )}
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-card p-4 shadow-sm border-[0.5px] border-border/50 rounded-2xl">
         <div className="w-full sm:w-1/3 relative">
-          <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
-            strokeWidth={1}
-          />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search products by Name or SKU..."
             value={searchTerm}
@@ -168,10 +177,7 @@ export default function ProductListPage() {
             htmlFor="low-stock"
             className="flex items-center cursor-pointer text-[13px] leading-tight"
           >
-            <AlertCircle
-              className="w-4 h-4 mr-2 text-destructive"
-              strokeWidth={1}
-            />
+            <AlertCircle className="w-4 h-4 mr-2 text-destructive" />
             Low stock only
           </Label>
         </div>
@@ -286,7 +292,7 @@ export default function ProductListPage() {
                         }
                       >
                         <span className="sr-only">Open menu</span>
-                        <MoreHorizontal className="h-4 w-4" strokeWidth={1} />
+                        <MoreHorizontal className="h-4 w-4" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent
                         align="end"
@@ -327,7 +333,7 @@ export default function ProductListPage() {
                             <>
                               <DropdownMenuSeparator className="border-border/50 border-b-[0.5px]" />
                               <DropdownMenuItem
-                                onClick={() => handleDelete(product.id)}
+                                onClick={() => setProductToDelete(product.id)}
                                 className="text-destructive focus:text-destructive cursor-pointer text-[13px]"
                               >
                                 Delete product
@@ -393,6 +399,32 @@ export default function ProductListPage() {
         onClose={() => setIsAdjustOpen(false)}
         product={selectedProduct}
       />
+
+      <AlertDialog
+        open={!!productToDelete}
+        onOpenChange={(open) => !open && setProductToDelete(null)}
+      >
+        <AlertDialogContent className="rounded-[12px]">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete this
+              product from your inventory.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-[10px]">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="rounded-[10px] bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete Product
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

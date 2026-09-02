@@ -43,6 +43,7 @@ export default function ChallanDetailPage() {
   const [isCancelling, setIsCancelling] = useState(false);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const {
     data: challan,
@@ -125,8 +126,40 @@ export default function ChallanDetailPage() {
     setIsCancelDialogOpen(true);
   };
 
-  const handleDownloadPDF = () => {
-    window.open(`/api/challans/${id}/pdf`, "_blank");
+  const handleDownloadPDF = async () => {
+    const element = document.getElementById("challan-document");
+    if (!element) return;
+
+    setIsDownloading(true);
+    try {
+      const { toPng } = await import("html-to-image");
+      const jsPDF = (await import("jspdf")).default;
+
+      const dataUrl = await toPng(element, { pixelRatio: 2 });
+
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const elementWidth = element.offsetWidth;
+      const elementHeight = element.offsetHeight;
+      const pdfHeight = (elementHeight * pdfWidth) / elementWidth;
+
+      pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`challan-${challan?.challanNumber || "draft"}.pdf`);
+    } catch (error) {
+      console.error("Failed to generate PDF", error);
+      toast.add({
+        title: "Download Failed",
+        description: "Could not generate PDF.",
+        type: "error",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   if (isLoading) {
@@ -246,15 +279,17 @@ export default function ChallanDetailPage() {
           <Button
             variant="outline"
             onClick={handleDownloadPDF}
+            disabled={isDownloading}
             className="rounded-[10px] h-9 shadow-sm border-[0.5px] border-border/50"
           >
-            <Download className="h-4 w-4 mr-2" /> Download PDF
+            <Download className={`h-4 w-4 mr-2 ${isDownloading ? "animate-pulse" : ""}`} /> 
+            {isDownloading ? "Generating PDF..." : "Download PDF"}
           </Button>
         </div>
       </div>
 
       {/* Snapshot Document */}
-      <Card className="overflow-hidden rounded-2xl border-[0.5px] border-border/50 shadow-sm bg-card">
+      <Card id="challan-document" className="overflow-hidden rounded-2xl border-[0.5px] border-border/50 shadow-sm bg-card">
         <div className="bg-muted/30 p-6 md:p-10 border-b-[0.5px] border-border/50">
           <div className="flex justify-between items-start">
             <div>

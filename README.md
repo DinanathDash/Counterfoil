@@ -1,6 +1,6 @@
 # Counterfoil
 
-Counterfoil is a modern, monolithic web application built to streamline operations for small-to-medium businesses. It provides a cohesive suite of modules encompassing Role-Based Access Control, Customer CRM, Inventory Management, and Sales Order (Challan) processing. 
+Counterfoil is a modern, monolithic web application built to streamline operations for small-to-medium businesses. It provides a cohesive suite of modules encompassing Role-Based Access Control, Customer CRM, Inventory Management, and Sales Order (Challan) processing.
 
 By deeply linking sales to inventory, Counterfoil ensures stock integrity through transactional guardrails (preventing negative inventory) while providing robust audit logs.
 
@@ -13,11 +13,12 @@ By deeply linking sales to inventory, Counterfoil ensures stock integrity throug
 5. **Dashboard**: A bird's-eye view aggregating metrics from all modules, complete with charts and urgent-action lists.
 
 ## Live Links (Placeholders)
+
 - **Frontend URL**: [https://counterfoil-frontend.vercel.app](https://counterfoil-frontend.vercel.app)
 - **Backend Base URL**: [https://counterfoil-api.onrender.com/api](https://counterfoil-api.onrender.com/api)
 - **API Health Check**: [https://counterfoil-api.onrender.com/api/health](https://counterfoil-api.onrender.com/api/health)
 
-*(Note: Render free tier instances spin down after inactivity. Initial API requests may take up to 50 seconds to respond as the instance wakes up).*
+_(Note: Render free tier instances spin down after inactivity. Initial API requests may take up to 50 seconds to respond as the instance wakes up)._
 
 ## Test Credentials
 
@@ -37,11 +38,12 @@ Use these seeded accounts to log in and explore role-based restrictions. **Passw
 - **Database**: PostgreSQL (Neon Serverless).
 - **Tooling**: Vitest, Supertest, ESLint, Prettier.
 
-*Why this stack?* The combination of TypeScript across the stack with Zod validations ensures end-to-end type safety. Prisma provides a fantastic developer experience for PostgreSQL, and Next.js + Shadcn/UI allows for incredibly fast, accessible, and beautiful frontend development.
+_Why this stack?_ The combination of TypeScript across the stack with Zod validations ensures end-to-end type safety. Prisma provides a fantastic developer experience for PostgreSQL, and Next.js + Shadcn/UI allows for incredibly fast, accessible, and beautiful frontend development.
 
 ## Documentation
 
 For a deeper dive into the system:
+
 - [Architecture & Schema Design](docs/architecture.md)
 - [Deployment Guide](docs/deployment.md)
 - [Postman API Collection](docs/postman_collection.json)
@@ -49,12 +51,14 @@ For a deeper dive into the system:
 ## Local Setup
 
 1. **Clone the repository**:
+
    ```bash
    git clone <repo-url>
    cd counterfoil
    ```
 
 2. **Backend Setup**:
+
    ```bash
    cd backend
    npm install
@@ -75,23 +79,25 @@ For a deeper dive into the system:
 ## Environment Variables
 
 ### Backend (`backend/.env`)
-| Variable | Purpose | Example |
-| -------- | ------- | ------- |
-| `PORT` | API port | `4000` |
-| `NODE_ENV` | Environment context | `development` |
+
+| Variable       | Purpose                      | Example                        |
+| -------------- | ---------------------------- | ------------------------------ |
+| `PORT`         | API port                     | `4000`                         |
+| `NODE_ENV`     | Environment context          | `development`                  |
 | `DATABASE_URL` | PostgreSQL connection string | `postgres://user:pass@host/db` |
-| `JWT_SECRET` | Secret for signing tokens | `supersecretkey` |
-| `CORS_ORIGIN` | Allowed frontend origin | `http://localhost:3000` |
+| `JWT_SECRET`   | Secret for signing tokens    | `supersecretkey`               |
+| `CORS_ORIGIN`  | Allowed frontend origin      | `http://localhost:3000`        |
 
 ### Frontend (`frontend/.env.local`)
-| Variable | Purpose | Example |
-| -------- | ------- | ------- |
+
+| Variable              | Purpose              | Example                     |
+| --------------------- | -------------------- | --------------------------- |
 | `NEXT_PUBLIC_API_URL` | Backend API base URL | `http://localhost:4000/api` |
 
 ## Business Rules
 
 - **Challan Numbering**: Auto-generated in the format `CHL-YYYY-XXXXX`.
-- **Stock Deduction**: Triggered *only* when a Draft Challan is confirmed.
+- **Stock Deduction**: Triggered _only_ when a Draft Challan is confirmed.
 - **Negative-Stock Prevention**: The API explicitly blocks confirming a challan if it exceeds current stock levels, returning a 409 Conflict.
 - **Snapshots**: When a challan is created, the customer details and product names/prices are deeply cloned into the challan record. If the customer changes their name or a product price increases months later, the historical challan remains perfectly intact.
 - **Status Transitions**: DRAFT -> CONFIRMED. Once CONFIRMED, it cannot go back to DRAFT. It can only go to CANCELLED (which restores stock).

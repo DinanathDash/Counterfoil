@@ -4,7 +4,7 @@ import { Customer, PaginatedResponse } from "@/types/api";
 export interface GetCustomersParams {
   page?: number;
   limit?: number;
-  search?: string;
+  q?: string;
   status?: string;
   type?: string;
   sortBy?: string;
@@ -78,7 +78,7 @@ export const customersApi = {
 
   addCustomerNote: async (
     id: string,
-    noteData: { note: string; followUpDate?: string; status?: string },
+    noteData: { note: string; followUpDate?: string | null; status?: string },
   ) => {
     const { data } = await apiClient.post<CustomerNote>(
       `/customers/${id}/notes`,

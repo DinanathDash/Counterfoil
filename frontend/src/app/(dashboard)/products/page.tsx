@@ -38,6 +38,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, Plus, AlertCircle, ArrowUpDown } from "lucide-react";
 
@@ -62,13 +63,13 @@ export default function ProductListPage() {
   const { data, isLoading } = useQuery({
     queryKey: [
       "products",
-      { page, limit, search: debouncedSearch, lowStock: lowStockOnly },
+      { page, limit, q: debouncedSearch, lowStock: lowStockOnly },
     ],
     queryFn: () =>
       productsApi.getProducts({
         page,
         limit,
-        search: debouncedSearch,
+        q: debouncedSearch,
         lowStock: lowStockOnly ? true : undefined,
       }),
   });
@@ -257,46 +258,48 @@ export default function ProductListPage() {
                         <MoreHorizontal className="h-4 w-4" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                          render={
-                            <Link
-                              href={`/products/${product.id}`}
-                              className="cursor-pointer"
-                            />
-                          }
-                        >
-                          View details & history
-                        </DropdownMenuItem>
-                        {canCreate && (
-                          <>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              onClick={() => handleEdit(product)}
-                              className="cursor-pointer"
-                            >
-                              Edit Product
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleAdjustStock(product)}
-                              className="cursor-pointer"
-                            >
-                              <ArrowUpDown className="mr-2 h-4 w-4" /> Adjust
-                              Stock
-                            </DropdownMenuItem>
-                          </>
-                        )}
-                        {canDelete && (
-                          <>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              onClick={() => handleDelete(product.id)}
-                              className="text-destructive focus:text-destructive cursor-pointer"
-                            >
-                              Delete Product
-                            </DropdownMenuItem>
-                          </>
-                        )}
+                        <DropdownMenuGroup>
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem
+                            render={
+                              <Link
+                                href={`/products/${product.id}`}
+                                className="cursor-pointer"
+                              />
+                            }
+                          >
+                            View details & history
+                          </DropdownMenuItem>
+                          {canCreate && (
+                            <>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() => handleEdit(product)}
+                                className="cursor-pointer"
+                              >
+                                Edit Product
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleAdjustStock(product)}
+                                className="cursor-pointer"
+                              >
+                                <ArrowUpDown className="mr-2 h-4 w-4" /> Adjust
+                                Stock
+                              </DropdownMenuItem>
+                            </>
+                          )}
+                          {canDelete && (
+                            <>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() => handleDelete(product.id)}
+                                className="text-destructive focus:text-destructive cursor-pointer"
+                              >
+                                Delete Product
+                              </DropdownMenuItem>
+                            </>
+                          )}
+                        </DropdownMenuGroup>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

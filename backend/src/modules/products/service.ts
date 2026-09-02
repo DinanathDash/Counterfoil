@@ -7,9 +7,10 @@ export const getProducts = async (params: {
   limit?: number;
   q?: string;
   category?: string;
+  lowStock?: string;
 }) => {
-  const page = params.page || 1;
-  const limit = params.limit || 50;
+  const page = Number(params.page) || 1;
+  const limit = Number(params.limit) || 50;
   const skip = (page - 1) * limit;
 
   const where: Prisma.ProductWhereInput = { deletedAt: null };
@@ -22,6 +23,17 @@ export const getProducts = async (params: {
   }
 
   if (params.category) where.category = params.category;
+
+  if (params.lowStock === 'true') {
+    const lowStockProducts = await prisma.$queryRaw<{ id: string }[]>`
+      SELECT id FROM "products"
+      WHERE "deletedAt" IS NULL
+        AND "isActive" = true
+        AND "currentStock" <= "minStockAlert"
+    `;
+    const ids = lowStockProducts.map((p) => p.id);
+    where.id = { in: ids };
+  }
 
   const [data, total] = await Promise.all([
     prisma.product.findMany({
@@ -64,17 +76,14 @@ export const getProductById = async (id: string) => {
     throw new AppError(404, 'NOT_FOUND', 'Product not found');
   }
 
-  return product;
-};
-
-export const getProductMovements = async (id: string) => {
-  const existing = await getProductById(id);
-  const movements = await prisma.stockMovement.findMany({
-    where: { productId: existing.id },
+  const recentMovements = await prisma.stockMovement.findMany({
+    where: { productId: product.id },
     orderBy: { createdAt: 'desc' },
     include: { createdBy: { select: { id: true, name: true } } },
+    take: 20,
   });
-  return movements;
+
+  return { product, recentMovements };
 };
 
 export const createProduct = async (data: Prisma.ProductUncheckedCreateInput) => {
@@ -91,7 +100,7 @@ export const createProduct = async (data: Prisma.ProductUncheckedCreateInput) =>
 export const updateProduct = async (id: string, data: Prisma.ProductUncheckedUpdateInput) => {
   const existing = await getProductById(id);
 
-  if (data.sku && data.sku !== existing.sku) {
+  if (data.sku && data.sku !== existing.product.sku) {
     const existingSku = await prisma.product.findUnique({ where: { sku: data.sku as string } });
     if (existingSku) {
       throw new AppError(409, 'CONFLICT', 'SKU already exists');

@@ -35,12 +35,6 @@ router.get(
   validate(uuidParamSchema),
   productController.getProductById,
 );
-router.get(
-  '/:id/movements',
-  requireRole('ADMIN', 'WAREHOUSE', 'SALES'),
-  validate(uuidParamSchema),
-  productController.getProductMovements,
-);
 
 // Write routes restricted to ADMIN and WAREHOUSE
 router.post(

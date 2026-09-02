@@ -29,16 +29,6 @@ export const getProductById = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-export const getProductMovements = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { id } = req.params;
-    const result = await productService.getProductMovements(id as string);
-    res.status(200).json(result);
-  } catch (error) {
-    next(error);
-  }
-};
-
 export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = { ...req.body };

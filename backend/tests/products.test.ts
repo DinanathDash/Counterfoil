@@ -123,7 +123,7 @@ describe('Products Module', () => {
 
       expect(res.status).toBe(200);
       // Our product has stock 5, minAlert 5, so it should be included
-      const found = res.body.find((p: any) => p.id === testProductId);
+      const found = res.body.find((p: { id: string }) => p.id === testProductId);
       expect(found).toBeDefined();
     });
   });

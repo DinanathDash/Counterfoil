@@ -49,7 +49,7 @@ export default function CustomersPage() {
       {
         page,
         limit,
-        search: debouncedSearch,
+        q: debouncedSearch,
         status: statusFilter,
         type: typeFilter,
       },
@@ -58,7 +58,7 @@ export default function CustomersPage() {
       customersApi.getCustomers({
         page,
         limit,
-        search: debouncedSearch || undefined,
+        q: debouncedSearch || undefined,
         status: statusFilter === "ALL" ? undefined : statusFilter,
         type: typeFilter === "ALL" ? undefined : typeFilter,
       }),

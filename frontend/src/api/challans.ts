@@ -4,7 +4,7 @@ import { PaginatedResponse, Challan } from "@/types/api";
 export interface GetChallansParams {
   page?: number;
   limit?: number;
-  search?: string;
+  q?: string;
   status?: string;
   customerId?: string;
   from?: string;

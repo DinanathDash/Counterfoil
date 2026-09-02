@@ -53,9 +53,16 @@ export function FollowUpNoteForm({
 
   const mutation = useMutation({
     mutationFn: (data: NoteFormValues) => {
+      let isoDate = undefined;
+      if (data.followUpDate) {
+        isoDate = new Date(data.followUpDate).toISOString();
+      } else if (data.followUpDate === "") {
+        isoDate = null; // Backend accepts null to clear
+      }
+
       return customersApi.addCustomerNote(customerId, {
         note: data.note,
-        followUpDate: data.followUpDate || undefined,
+        followUpDate: isoDate,
         status: data.status,
       });
     },

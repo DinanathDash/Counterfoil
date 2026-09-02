@@ -3,6 +3,7 @@
 Counterfoil is designed to be deployed with the Backend hosted on **Render** (as a Web Service) and the Frontend hosted on **Vercel**.
 
 ## 1. Prerequisites
+
 - A PostgreSQL database (e.g., Neon, Supabase, or AWS RDS).
 - A GitHub repository containing the Counterfoil source code.
 - Accounts on Render and Vercel.
@@ -16,7 +17,7 @@ Counterfoil is designed to be deployed with the Backend hosted on **Render** (as
    - **Name**: `counterfoil-api`
    - **Root Directory**: `backend`
    - **Environment**: `Node`
-   - **Build Command**: `npm install --include=dev && npm run build && npx prisma generate`
+   - **Build Command**: `npm install --include=dev && npm run build && npx prisma generate && npx prisma migrate deploy && npx prisma db seed`
    - **Start Command**: `npm start`
 5. Configure Environment Variables (under the "Environment" tab):
    - `DATABASE_URL`: Your PostgreSQL connection string.
@@ -26,12 +27,7 @@ Counterfoil is designed to be deployed with the Backend hosted on **Render** (as
 6. Click **Create Web Service**.
 7. Wait for the build to complete and note down the provided `onrender.com` URL.
 
-### Running Migrations in Production
-Once deployed, you need to apply the database migrations:
-1. Go to your Render Web Service dashboard.
-2. Click the **Shell** tab.
-3. Run `npx prisma db push` (or `npx prisma migrate deploy`).
-4. To seed initial data, run `npm run seed`.
+_(Note: The build command above automatically runs database migrations and seeds the initial data so you do not need shell access!)_
 
 ## 3. Frontend Deployment (Vercel)
 
@@ -52,6 +48,7 @@ Once deployed, you need to apply the database migrations:
 ## 4. Final Configuration (CORS)
 
 Once you have your Vercel frontend URL:
+
 1. Go back to your Render Backend environment variables.
 2. Add a new variable: `CORS_ORIGIN` = `https://your-vercel-app-url.vercel.app`.
 3. Restart the Render Web Service to apply the new CORS policy.

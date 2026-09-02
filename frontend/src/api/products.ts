@@ -4,7 +4,7 @@ import { PaginatedResponse, Product, StockMovement } from "@/types/api";
 export interface GetProductsParams {
   page?: number;
   limit?: number;
-  search?: string;
+  q?: string;
   category?: string;
   lowStock?: boolean;
 }
@@ -57,7 +57,7 @@ export const productsApi = {
     const { data } = await apiClient.post<{
       message: string;
       movement: StockMovement;
-    }>(`/products/${id}/stock-adjustments`, adjustData);
+    }>(`/products/${id}/adjust`, adjustData);
     return data;
   },
 };

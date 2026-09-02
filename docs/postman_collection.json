@@ -38,13 +38,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/login",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
             }
           }
         },
@@ -65,13 +60,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/auth/me",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "me"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
             }
           }
         }
@@ -97,12 +87,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/customers?page=1&limit=10",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "customers"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["customers"],
               "query": [
                 {
                   "key": "page",
@@ -138,12 +124,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/products",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "products"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["products"]
             }
           }
         }
@@ -169,12 +151,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/challans",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "challans"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["challans"]
             }
           }
         }

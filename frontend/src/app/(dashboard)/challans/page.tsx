@@ -52,7 +52,7 @@ export default function ChallanListPage() {
       {
         page,
         limit,
-        search: debouncedSearch,
+        q: debouncedSearch,
         status: statusFilter !== "ALL" ? statusFilter : undefined,
       },
     ],
@@ -60,7 +60,7 @@ export default function ChallanListPage() {
       challansApi.getChallans({
         page,
         limit,
-        search: debouncedSearch,
+        q: debouncedSearch || undefined,
         status: statusFilter !== "ALL" ? statusFilter : undefined,
       }),
   });

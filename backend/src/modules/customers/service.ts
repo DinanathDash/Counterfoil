@@ -9,8 +9,8 @@ export const getCustomers = async (params: {
   status?: CustomerStatus;
   type?: CustomerType;
 }) => {
-  const page = params.page || 1;
-  const limit = params.limit || 50;
+  const page = Number(params.page) || 1;
+  const limit = Number(params.limit) || 50;
   const skip = (page - 1) * limit;
 
   const where: Prisma.CustomerWhereInput = { deletedAt: null };
@@ -96,7 +96,13 @@ export const getCustomerById = async (id: string) => {
     throw new AppError(404, 'NOT_FOUND', 'Customer not found');
   }
 
-  return customer;
+  const { followUpNotes, challans, ...customerData } = customer;
+
+  return {
+    customer: customerData,
+    recentNotes: followUpNotes,
+    recentChallans: challans,
+  };
 };
 
 export const createCustomer = async (data: Prisma.CustomerUncheckedCreateInput) => {

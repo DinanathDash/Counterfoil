@@ -3,7 +3,7 @@ import { env } from '../config/env';
 
 const prismaClientSingleton = () => {
   return new PrismaClient({
-    log: env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+    log: env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
   });
 };
 

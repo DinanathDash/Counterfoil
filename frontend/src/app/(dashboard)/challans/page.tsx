@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { challansApi } from "@/api/challans";
 import { useDebounce } from "@/hooks/useDebounce";
 import { format } from "date-fns";
@@ -37,6 +37,15 @@ import { useAuthStore } from "@/store/useAuthStore";
 export default function ChallanListPage() {
   const user = useAuthStore((state) => state.user);
   const canCreate = user?.role === "ADMIN" || user?.role === "SALES";
+  const queryClient = useQueryClient();
+
+  // Warm the detail query on hover so the modal usually opens with cached
+  // data instead of showing its loading skeleton.
+  const prefetchChallan = (id: string) => {
+    queryClient
+      .query({ queryKey: ["challan", id], queryFn: () => challansApi.getChallan(id) })
+      .catch(() => {});
+  };
 
   const [page, setPage] = useState(1);
   const limit = 10;
@@ -257,7 +266,11 @@ export default function ChallanListPage() {
                     {getStatusBadge(challan.status)}
                   </TableCell>
                   <TableCell className="text-right pr-5">
-                    <Link href={`/challans/${challan.id}`}>
+                    <Link
+                      href={`/challans/${challan.id}`}
+                      onMouseEnter={() => prefetchChallan(challan.id)}
+                      onFocus={() => prefetchChallan(challan.id)}
+                    >
                       <Button
                         variant="ghost"
                         size="sm"

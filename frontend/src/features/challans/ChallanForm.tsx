@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Card,
   CardContent,
@@ -81,18 +82,25 @@ export function ChallanForm({ initialData, isEdit }: ChallanFormProps) {
   const [customerOpen, setCustomerOpen] = useState(false);
 
   // Fetch customers (active ones ideally, but let's get all for now, could filter to ACTIVE later)
-  const { data: customersData } = useQuery({
+  const { data: customersData, isLoading: customersLoading } = useQuery({
     queryKey: ["customers", { limit: 1000 }],
     queryFn: () => customersApi.getCustomers({ limit: 1000, status: "ACTIVE" }),
   });
   const customers = customersData?.data || [];
 
   // Fetch products (with limit 1000 for dropdown)
-  const { data: productsData } = useQuery({
+  const { data: productsData, isLoading: productsLoading } = useQuery({
     queryKey: ["products", { limit: 1000 }],
     queryFn: () => productsApi.getProducts({ limit: 1000 }),
   });
   const products = productsData?.data || [];
+
+  // Both queries back the customer combobox and every product select below —
+  // rendering the real form before they resolve shows working-looking inputs
+  // with no options yet (e.g. a selected product falling back to "Select a
+  // product..." because `products` is still empty), which reads as broken
+  // rather than loading. Show a matching skeleton instead.
+  const depsLoading = customersLoading || productsLoading;
 
   const {
     register,
@@ -217,6 +225,10 @@ export function ChallanForm({ initialData, isEdit }: ChallanFormProps) {
 
   const isPending = createMutation.isPending || updateMutation.isPending;
 
+  if (depsLoading) {
+    return <ChallanFormSkeleton rowCount={initialData?.items.length} />;
+  }
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -310,7 +322,7 @@ export function ChallanForm({ initialData, isEdit }: ChallanFormProps) {
             </p>
           )}
 
-          <div className="border rounded-md overflow-hidden">
+          <div className="border rounded-md overflow-x-auto">
             <Table>
               <TableHeader className="bg-muted/50">
                 <TableRow>
@@ -493,6 +505,75 @@ export function ChallanForm({ initialData, isEdit }: ChallanFormProps) {
           >
             Save & Confirm
           </Button>
+        </div>
+      </CardFooter>
+    </Card>
+  );
+}
+
+// Mirrors ChallanForm's real layout exactly, so there's no visible jump
+// between "challan is loading" (EditChallanPage, before this component even
+// mounts) and "customers/products are loading" (this component's own
+// depsLoading branch above) — same skeleton either way.
+export function ChallanFormSkeleton({ rowCount = 3 }: { rowCount?: number }) {
+  return (
+    <Card className="w-full">
+      <CardHeader>
+        <Skeleton className="h-6 w-48" />
+        <Skeleton className="h-4 w-72" />
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="space-y-2 max-w-sm">
+          <Skeleton className="h-4 w-20" />
+          <Skeleton className="h-9 w-full" />
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-8 w-28" />
+          </div>
+          <div className="border rounded-md overflow-x-auto">
+            <Table>
+              <TableHeader className="bg-muted/50">
+                <TableRow>
+                  <TableHead className="w-[40%]">Product</TableHead>
+                  <TableHead>Available Stock</TableHead>
+                  <TableHead className="w-24">Qty</TableHead>
+                  <TableHead className="w-32">Unit Price</TableHead>
+                  <TableHead className="w-32">Total</TableHead>
+                  <TableHead className="w-12"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {Array.from({ length: rowCount }).map((_, i) => (
+                  <TableRow key={i}>
+                    <TableCell><Skeleton className="h-9 w-full" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-8" /></TableCell>
+                    <TableCell><Skeleton className="h-9 w-full" /></TableCell>
+                    <TableCell><Skeleton className="h-9 w-full" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                    <TableCell><Skeleton className="h-8 w-8" /></TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          <div className="flex justify-end pt-4">
+            <Skeleton className="h-8 w-40" />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-20 w-full" />
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-between border-t p-6">
+        <Skeleton className="h-9 w-20" />
+        <div className="flex space-x-3">
+          <Skeleton className="h-9 w-28" />
+          <Skeleton className="h-9 w-32" />
         </div>
       </CardFooter>
     </Card>

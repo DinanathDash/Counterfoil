@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { challansApi } from "@/api/challans";
-import { ChallanForm } from "@/features/challans/ChallanForm";
+import { ChallanForm, ChallanFormSkeleton } from "@/features/challans/ChallanForm";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
@@ -24,9 +24,15 @@ export default function EditChallanPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6 max-w-5xl mx-auto pb-12">
-        <Skeleton className="h-10 w-1/4" />
-        <Skeleton className="h-[500px] w-full" />
+      <div className="pb-8 tracking-[0.01em] space-y-8 max-w-5xl mx-auto">
+        <div className="flex items-center space-x-4">
+          <Skeleton className="h-9 w-9 rounded-[10px]" />
+          <div className="space-y-2">
+            <Skeleton className="h-7 w-64" />
+            <Skeleton className="h-4 w-48" />
+          </div>
+        </div>
+        <ChallanFormSkeleton />
       </div>
     );
   }

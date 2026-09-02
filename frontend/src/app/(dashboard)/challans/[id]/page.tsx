@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { challansApi } from "@/api/challans";
+import { customersApi } from "@/api/customers";
+import { productsApi } from "@/api/products";
 import { useAuthStore } from "@/store/useAuthStore";
 import { format } from "date-fns";
 import Link from "next/link";
@@ -53,6 +55,23 @@ export default function ChallanDetailPage() {
     queryKey: ["challan", id],
     queryFn: () => challansApi.getChallan(id),
   });
+
+  // ChallanForm needs both of these before it can render anything but its
+  // own skeleton — warm them on hover so "Edit draft" usually opens instantly.
+  const prefetchEditDeps = () => {
+    queryClient
+      .query({
+        queryKey: ["customers", { limit: 1000 }],
+        queryFn: () => customersApi.getCustomers({ limit: 1000, status: "ACTIVE" }),
+      })
+      .catch(() => {});
+    queryClient
+      .query({
+        queryKey: ["products", { limit: 1000 }],
+        queryFn: () => productsApi.getProducts({ limit: 1000 }),
+      })
+      .catch(() => {});
+  };
 
   const confirmMutation = useMutation({
     mutationFn: () => challansApi.confirmChallan(id),
@@ -164,9 +183,55 @@ export default function ChallanDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6 max-w-5xl mx-auto pb-12">
-        <Skeleton className="h-10 w-1/3" />
-        <Skeleton className="h-[600px]" />
+      <div className="pb-8 tracking-[0.01em] space-y-8 max-w-5xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center space-x-4">
+            <Skeleton className="h-9 w-9 rounded-[10px]" />
+            <div className="space-y-2">
+              <Skeleton className="h-7 w-56" />
+              <Skeleton className="h-4 w-40" />
+            </div>
+          </div>
+        </div>
+
+        {/* Snapshot document */}
+        <Card className="overflow-hidden rounded-2xl border-[0.5px] border-border/50 shadow-sm bg-card">
+          <div className="bg-muted/30 p-6 md:p-10 border-b-[0.5px] border-border/50">
+            <div className="flex justify-between items-start">
+              <div className="space-y-2">
+                <Skeleton className="h-3 w-20" />
+                <Skeleton className="h-5 w-40" />
+                <Skeleton className="h-4 w-28" />
+              </div>
+              <div className="space-y-2 items-end flex flex-col">
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+            </div>
+          </div>
+          <div className="p-6 md:p-10 space-y-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-4">
+                <Skeleton className="h-4 w-4 rounded-full" />
+                <Skeleton className="h-4 flex-1" />
+                <Skeleton className="h-4 w-12" />
+                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-4 w-20" />
+              </div>
+            ))}
+            <div className="flex justify-end pt-4">
+              <Skeleton className="h-6 w-40" />
+            </div>
+          </div>
+        </Card>
+
+        {/* Actions */}
+        <div className="flex flex-wrap justify-end gap-2">
+          <Skeleton className="h-9 w-36 rounded-[10px]" />
+          <Skeleton className="h-9 w-28 rounded-[10px]" />
+        </div>
       </div>
     );
   }
@@ -204,7 +269,7 @@ export default function ChallanDetailPage() {
   return (
     <div className="pb-8 tracking-[0.01em] space-y-8 max-w-5xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex items-center gap-4">
         <div className="flex items-center space-x-4">
           <Link
             href="/challans"
@@ -246,46 +311,6 @@ export default function ChallanDetailPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {canEdit && (
-            <Link href={`/challans/${id}/edit`}>
-              <Button
-                variant="outline"
-                className="rounded-[10px] h-9 shadow-sm border-[0.5px] border-border/50"
-              >
-                <Edit className="h-4 w-4 mr-2" /> Edit draft
-              </Button>
-            </Link>
-          )}
-          {canConfirm && (
-            <Button
-              onClick={handleConfirm}
-              disabled={isConfirming}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-[10px] h-9 shadow-sm"
-            >
-              <CheckCircle2 className="h-4 w-4 mr-2" /> Confirm & issue
-            </Button>
-          )}
-          {canCancelUser && !isCancelled && (
-            <Button
-              variant="destructive"
-              onClick={handleCancel}
-              disabled={isCancelling}
-              className="rounded-[10px] h-9 shadow-sm"
-            >
-              <Trash2 className="h-4 w-4 mr-2" /> Cancel challan
-            </Button>
-          )}
-          <Button
-            variant="outline"
-            onClick={handleDownloadPDF}
-            disabled={isDownloading}
-            className="rounded-[10px] h-9 shadow-sm border-[0.5px] border-border/50"
-          >
-            <Download className={`h-4 w-4 mr-2 ${isDownloading ? "animate-pulse" : ""}`} /> 
-            {isDownloading ? "Generating PDF..." : "Download PDF"}
-          </Button>
-        </div>
       </div>
 
       {/* Snapshot Document */}
@@ -397,6 +422,67 @@ export default function ChallanDetailPage() {
           </div>
         )}
       </Card>
+
+      {/* Actions — kept outside #challan-document so they stay out of the PDF */}
+      <div className="flex flex-wrap justify-end gap-2">
+        <Button
+          variant="outline"
+          onClick={handleDownloadPDF}
+          disabled={isDownloading}
+          className="rounded-[10px] h-9 shadow-sm border-[0.5px] border-border/50"
+        >
+          <Download
+            className={`h-4 w-4 mr-2 ${isDownloading ? "animate-pulse" : ""}`}
+          />
+          {/* Both labels share one grid cell, so the button is always sized to
+              the wider of the two and doesn't resize when a download starts. */}
+          <span className="grid">
+            <span
+              className={`col-start-1 row-start-1 ${isDownloading ? "invisible" : ""}`}
+            >
+              Download PDF
+            </span>
+            <span
+              className={`col-start-1 row-start-1 ${isDownloading ? "" : "invisible"}`}
+            >
+              Generating PDF...
+            </span>
+          </span>
+        </Button>
+        {canCancelUser && !isCancelled && (
+          <Button
+            variant="destructive"
+            onClick={handleCancel}
+            disabled={isCancelling}
+            className="rounded-[10px] h-9 shadow-sm"
+          >
+            <Trash2 className="h-4 w-4 mr-2" /> Cancel challan
+          </Button>
+        )}
+        {canEdit && (
+          <Link
+            href={`/challans/${id}/edit`}
+            onMouseEnter={prefetchEditDeps}
+            onFocus={prefetchEditDeps}
+          >
+            <Button
+              variant="outline"
+              className="rounded-[10px] h-9 shadow-sm border-[0.5px] border-border/50"
+            >
+              <Edit className="h-4 w-4 mr-2" /> Edit draft
+            </Button>
+          </Link>
+        )}
+        {canConfirm && (
+          <Button
+            onClick={handleConfirm}
+            disabled={isConfirming}
+            className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-[10px] h-9 shadow-sm"
+          >
+            <CheckCircle2 className="h-4 w-4 mr-2" /> Confirm & issue
+          </Button>
+        )}
+      </div>
 
       <AlertDialog
         open={isConfirmDialogOpen}

@@ -16,21 +16,21 @@ const uuidParamSchema = z.object({
 
 router.use(authenticate);
 
-// Read-only routes allowed for ADMIN, WAREHOUSE, SALES
+// Read-only routes allowed for all roles (Challans: read)
 router.get(
   '/',
-  requireRole('ADMIN', 'WAREHOUSE', 'SALES'),
+  requireRole('ADMIN', 'WAREHOUSE', 'SALES', 'ACCOUNTS'),
   validate(queryChallanSchema),
   challanController.getChallans,
 );
 router.get(
   '/:id',
-  requireRole('ADMIN', 'WAREHOUSE', 'SALES'),
+  requireRole('ADMIN', 'WAREHOUSE', 'SALES', 'ACCOUNTS'),
   validate(uuidParamSchema),
   challanController.getChallanById,
 );
 
-// Write routes restricted to ADMIN and SALES
+// Write routes restricted to ADMIN and SALES (Challans: create / edit draft)
 router.post(
   '/',
   requireRole('ADMIN', 'SALES'),
@@ -43,15 +43,19 @@ router.patch(
   validate(uuidParamSchema.merge(updateChallanSchema)),
   challanController.updateChallan,
 );
+
+// Confirm allowed for ADMIN, SALES, WAREHOUSE
 router.post(
   '/:id/confirm',
-  requireRole('ADMIN', 'SALES'),
+  requireRole('ADMIN', 'SALES', 'WAREHOUSE'),
   validate(uuidParamSchema),
   challanController.confirmChallan,
 );
+
+// Cancel allowed for ADMIN only
 router.post(
   '/:id/cancel',
-  requireRole('ADMIN', 'SALES'),
+  requireRole('ADMIN'),
   validate(uuidParamSchema),
   challanController.cancelChallan,
 );

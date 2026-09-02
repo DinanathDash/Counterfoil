@@ -19,20 +19,22 @@ const uuidParamSchema = z.object({
   }),
 });
 
-router.use(authenticate, requireRole('ADMIN', 'SALES')); // Only ADMIN and SALES can access CRM
+router.use(authenticate);
 
-router.get('/', validate(queryCustomerSchema), customerController.getCustomers);
-router.get('/follow-ups', customerController.getFollowUps);
-router.get('/:id', validate(uuidParamSchema), customerController.getCustomerById);
-router.post('/', validate(createCustomerSchema), customerController.createCustomer);
+router.get('/', requireRole('ADMIN', 'SALES', 'ACCOUNTS'), validate(queryCustomerSchema), customerController.getCustomers);
+router.get('/follow-ups', requireRole('ADMIN', 'SALES'), customerController.getFollowUps);
+router.get('/:id', requireRole('ADMIN', 'SALES', 'ACCOUNTS'), validate(uuidParamSchema), customerController.getCustomerById);
+router.post('/', requireRole('ADMIN', 'SALES'), validate(createCustomerSchema), customerController.createCustomer);
 router.patch(
   '/:id',
+  requireRole('ADMIN', 'SALES'),
   validate(uuidParamSchema.merge(updateCustomerSchema)),
   customerController.updateCustomer,
 );
-router.delete('/:id', validate(uuidParamSchema), customerController.deleteCustomer);
+router.delete('/:id', requireRole('ADMIN'), validate(uuidParamSchema), customerController.deleteCustomer);
 router.post(
   '/:id/notes',
+  requireRole('ADMIN', 'SALES'),
   validate(uuidParamSchema.merge(addNoteSchema)),
   customerController.addNote,
 );

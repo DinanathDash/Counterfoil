@@ -21,17 +21,17 @@ const uuidParamSchema = z.object({
 
 router.use(authenticate);
 
-// Read-only routes allowed for SALES as well
+// Read-only routes allowed for all roles (Products: read)
 router.get(
   '/',
-  requireRole('ADMIN', 'WAREHOUSE', 'SALES'),
+  requireRole('ADMIN', 'WAREHOUSE', 'SALES', 'ACCOUNTS'),
   validate(queryProductSchema),
   productController.getProducts,
 );
-router.get('/low-stock', requireRole('ADMIN', 'WAREHOUSE', 'SALES'), productController.getLowStock);
+router.get('/low-stock', requireRole('ADMIN', 'WAREHOUSE', 'SALES', 'ACCOUNTS'), productController.getLowStock);
 router.get(
   '/:id',
-  requireRole('ADMIN', 'WAREHOUSE', 'SALES'),
+  requireRole('ADMIN', 'WAREHOUSE', 'SALES', 'ACCOUNTS'),
   validate(uuidParamSchema),
   productController.getProductById,
 );
@@ -51,7 +51,7 @@ router.patch(
 );
 router.delete(
   '/:id',
-  requireRole('ADMIN', 'WAREHOUSE'),
+  requireRole('ADMIN'),
   validate(uuidParamSchema),
   productController.deleteProduct,
 );

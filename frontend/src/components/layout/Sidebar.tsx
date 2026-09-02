@@ -31,13 +31,16 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+import { hasPermission, type Permission } from "@/auth/permissions";
+
 type NavItem = {
   title: string;
   href?: string;
   icon: LucideIcon;
   badge?: number;
   isDummy?: boolean;
-  children?: { title: string; href: string; isDummy?: boolean }[];
+  requiredPermission?: Permission;
+  children?: { title: string; href: string; isDummy?: boolean; requiredPermission?: Permission }[];
 };
 
 type NavGroup = {
@@ -49,7 +52,7 @@ const navGroups: NavGroup[] = [
   {
     label: "Main",
     items: [
-      { title: "Dashboard", href: "/", icon: LayoutDashboard, badge: 2 },
+      { title: "Dashboard", href: "/", icon: LayoutDashboard, badge: 2, requiredPermission: "VIEW_DASHBOARD" },
       {
         title: "Analytics",
         icon: LineChart,
@@ -66,9 +69,9 @@ const navGroups: NavGroup[] = [
   {
     label: "Operations",
     items: [
-      { title: "Customers", href: "/customers", icon: Users },
-      { title: "Products", href: "/products", icon: Package },
-      { title: "Challans", href: "/challans", icon: FileText },
+      { title: "Customers", href: "/customers", icon: Users, requiredPermission: "VIEW_CUSTOMER" },
+      { title: "Products", href: "/products", icon: Package, requiredPermission: "VIEW_PRODUCT" },
+      { title: "Challans", href: "/challans", icon: FileText, requiredPermission: "VIEW_CHALLAN" },
     ],
   },
   {
@@ -208,6 +211,14 @@ export function Sidebar() {
                 const Icon = item.icon;
                 const hasChildren = !!item.children;
                 const isExpanded = expandedItems[item.title];
+
+                if (
+                  item.requiredPermission &&
+                  user &&
+                  !hasPermission(user.role, item.requiredPermission)
+                ) {
+                  return null;
+                }
 
                 const tooltipText = item.isDummy
                   ? "This is a dummy element."

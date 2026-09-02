@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/auth/AuthProvider";
 import { Toaster } from "@/components/ui/toast";
 import { ReactQueryProvider } from "@/lib/queryClient";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export const metadata: Metadata = {
   title: "Counterfoil ERP",
@@ -20,8 +21,10 @@ export default function RootLayout({
       <body className={GeistSans.className}>
         <ReactQueryProvider>
           <AuthProvider>
-            {children}
-            <Toaster />
+            <TooltipProvider delay={100}>
+              {children}
+              <Toaster />
+            </TooltipProvider>
           </AuthProvider>
         </ReactQueryProvider>
       </body>

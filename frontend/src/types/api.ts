@@ -94,3 +94,16 @@ export interface Challan {
   customerBusiness: string | null;
   items: ChallanItem[];
 }
+
+export interface StockMovement {
+  id: string;
+  productId: string;
+  type: "IN" | "OUT";
+  quantity: number;
+  balanceAfter: number;
+  reason: string;
+  challanId: string | null;
+  createdById: string;
+  createdAt: string;
+  createdBy: { name: string; email: string };
+}

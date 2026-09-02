@@ -129,7 +129,11 @@ export default function ProductDetailPage() {
         <div className="flex items-center space-x-4">
           <Link
             href="/products"
-            className={buttonVariants({ variant: "ghost", size: "icon", className: "rounded-[10px]" })}
+            className={buttonVariants({
+              variant: "ghost",
+              size: "icon",
+              className: "rounded-[10px]",
+            })}
           >
             <ArrowLeft className="h-5 w-5" strokeWidth={1} />
           </Link>
@@ -137,7 +141,9 @@ export default function ProductDetailPage() {
             <h1 className="text-2xl font-bold text-ink flex items-center gap-3">
               {product.name}
               {product.status === "DISCONTINUED" && (
-                <Badge variant="destructive" className="rounded-[6px]">Discontinued</Badge>
+                <Badge variant="destructive" className="rounded-[6px]">
+                  Discontinued
+                </Badge>
               )}
             </h1>
             <p className="text-[13px] leading-tight text-muted-foreground font-mono mt-1">
@@ -149,11 +155,19 @@ export default function ProductDetailPage() {
         <div className="flex space-x-2">
           {canEdit && (
             <>
-              <Button variant="outline" onClick={() => setIsFormOpen(true)} className="rounded-[10px] h-9 shadow-sm border-[0.5px] border-border/50">
+              <Button
+                variant="outline"
+                onClick={() => setIsFormOpen(true)}
+                className="rounded-[10px] h-9 shadow-sm border-[0.5px] border-border/50"
+              >
                 <Edit className="h-4 w-4 mr-2" strokeWidth={1} /> Edit
               </Button>
-              <Button onClick={() => setIsAdjustOpen(true)} className="rounded-[10px] h-9 shadow-sm">
-                <ArrowUpDown className="h-4 w-4 mr-2" strokeWidth={1} /> Adjust stock
+              <Button
+                onClick={() => setIsAdjustOpen(true)}
+                className="rounded-[10px] h-9 shadow-sm"
+              >
+                <ArrowUpDown className="h-4 w-4 mr-2" strokeWidth={1} /> Adjust
+                stock
               </Button>
             </>
           )}
@@ -175,12 +189,15 @@ export default function ProductDetailPage() {
         <div className="md:col-span-1 space-y-6">
           <Card className="shadow-sm border-[0.5px] border-border/50 rounded-2xl bg-card">
             <CardHeader className="pb-3 border-b-[0.5px] border-border/50 bg-canvas/30">
-              <CardTitle className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider">Product Details</CardTitle>
+              <CardTitle className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider">
+                Product Details
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 pt-4">
               <div className="flex justify-between items-center py-2 border-b-[0.5px] border-border/50">
                 <span className="text-muted-foreground text-[13px] leading-tight flex items-center">
-                  <Package className="w-4 h-4 mr-2" strokeWidth={1} /> Stock Status
+                  <Package className="w-4 h-4 mr-2" strokeWidth={1} /> Stock
+                  Status
                 </span>
                 <span
                   className={`font-bold text-lg ${isLowStock ? "text-destructive" : "text-primary"}`}
@@ -193,14 +210,18 @@ export default function ProductDetailPage() {
                 <span className="text-muted-foreground text-[13px] leading-tight">
                   Min Stock Alert
                 </span>
-                <span className="font-medium text-[13px] leading-tight">{product.minStockAlert}</span>
+                <span className="font-medium text-[13px] leading-tight">
+                  {product.minStockAlert}
+                </span>
               </div>
 
               <div className="flex justify-between items-center py-2 border-b-[0.5px] border-border/50">
                 <span className="text-muted-foreground text-[13px] leading-tight flex items-center">
                   <Tag className="w-4 h-4 mr-2" strokeWidth={1} /> Category
                 </span>
-                <Badge variant="secondary" className="rounded-[6px]">{product.category}</Badge>
+                <Badge variant="secondary" className="rounded-[6px]">
+                  {product.category}
+                </Badge>
               </div>
 
               <div className="flex justify-between items-center py-2 border-b-[0.5px] border-border/50">
@@ -226,7 +247,9 @@ export default function ProductDetailPage() {
                   <span className="text-muted-foreground text-[12px] block mb-1">
                     Description
                   </span>
-                  <p className="text-[13px] leading-tight text-ink">{product.description}</p>
+                  <p className="text-[13px] leading-tight text-ink">
+                    {product.description}
+                  </p>
                 </div>
               )}
             </CardContent>
@@ -237,24 +260,41 @@ export default function ProductDetailPage() {
         <div className="md:col-span-2">
           <Card className="h-full shadow-sm border-[0.5px] border-border/50 rounded-2xl bg-card">
             <CardHeader className="pb-3 border-b-[0.5px] border-border/50 bg-canvas/30">
-              <CardTitle className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider">Recent Stock Movements</CardTitle>
+              <CardTitle className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider">
+                Recent Stock Movements
+              </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               {recentMovements && recentMovements.length > 0 ? (
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-canvas/50 hover:bg-canvas/50 border-b-[0.5px] border-border/50">
-                      <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider pl-5">Date</TableHead>
-                      <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Type</TableHead>
-                      <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Qty</TableHead>
-                      <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Balance</TableHead>
-                      <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Reason</TableHead>
-                      <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider pr-5">User</TableHead>
+                      <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider pl-5">
+                        Date
+                      </TableHead>
+                      <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">
+                        Type
+                      </TableHead>
+                      <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">
+                        Qty
+                      </TableHead>
+                      <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">
+                        Balance
+                      </TableHead>
+                      <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">
+                        Reason
+                      </TableHead>
+                      <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider pr-5">
+                        User
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {recentMovements.map((movement) => (
-                      <TableRow key={movement.id} className="border-b-[0.5px] border-border/50">
+                      <TableRow
+                        key={movement.id}
+                        className="border-b-[0.5px] border-border/50"
+                      >
                         <TableCell className="whitespace-nowrap text-[13px] leading-tight pl-5">
                           {format(
                             new Date(movement.createdAt),
@@ -267,14 +307,22 @@ export default function ProductDetailPage() {
                               variant="outline"
                               className="text-emerald-600 border-emerald-600/50 bg-emerald-50 rounded-[6px]"
                             >
-                              <ArrowDownRight className="w-3 h-3 mr-1" strokeWidth={1} /> IN
+                              <ArrowDownRight
+                                className="w-3 h-3 mr-1"
+                                strokeWidth={1}
+                              />{" "}
+                              IN
                             </Badge>
                           ) : (
                             <Badge
                               variant="outline"
                               className="text-orange-600 border-orange-600/50 bg-orange-50 rounded-[6px]"
                             >
-                              <ArrowUpRight className="w-3 h-3 mr-1" strokeWidth={1} /> OUT
+                              <ArrowUpRight
+                                className="w-3 h-3 mr-1"
+                                strokeWidth={1}
+                              />{" "}
+                              OUT
                             </Badge>
                           )}
                         </TableCell>

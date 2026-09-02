@@ -65,7 +65,13 @@ export default function DashboardPage() {
 
   const challanChartOption = {
     tooltip: { trigger: "item" },
-    grid: { left: "0%", right: "0%", bottom: "0%", top: "10%", containLabel: true },
+    grid: {
+      left: "0%",
+      right: "0%",
+      bottom: "0%",
+      top: "10%",
+      containLabel: true,
+    },
     xAxis: {
       type: "category",
       data: ["Draft", "Confirmed"],
@@ -76,8 +82,14 @@ export default function DashboardPage() {
     series: [
       {
         data: [
-          { value: challans.draft, itemStyle: { color: "#3b82f6", borderRadius: [4, 4, 0, 0] } },
-          { value: challans.confirmed, itemStyle: { color: "#10b981", borderRadius: [4, 4, 0, 0] } },
+          {
+            value: challans.draft,
+            itemStyle: { color: "#3b82f6", borderRadius: [4, 4, 0, 0] },
+          },
+          {
+            value: challans.confirmed,
+            itemStyle: { color: "#10b981", borderRadius: [4, 4, 0, 0] },
+          },
         ],
         type: "bar",
         barWidth: "40%",
@@ -98,9 +110,21 @@ export default function DashboardPage() {
         },
         label: { show: false },
         data: [
-          { value: customers.active, name: "Active", itemStyle: { color: "#3b82f6" } },
-          { value: customers.lead, name: "Lead", itemStyle: { color: "#f59e0b" } },
-          { value: inactiveCustomers, name: "Inactive", itemStyle: { color: "#ef4444" } },
+          {
+            value: customers.active,
+            name: "Active",
+            itemStyle: { color: "#3b82f6" },
+          },
+          {
+            value: customers.lead,
+            name: "Lead",
+            itemStyle: { color: "#f59e0b" },
+          },
+          {
+            value: inactiveCustomers,
+            name: "Inactive",
+            itemStyle: { color: "#ef4444" },
+          },
         ],
       },
     ],
@@ -125,7 +149,10 @@ export default function DashboardPage() {
               <CardTitle className="text-[12px] font-medium text-muted-foreground">
                 Total customers
               </CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" strokeWidth={1} />
+              <Users
+                className="h-4 w-4 text-muted-foreground"
+                strokeWidth={1}
+              />
             </CardHeader>
             <CardContent className="px-5 pb-5">
               <div className="text-2xl font-bold">{customers.total}</div>
@@ -140,7 +167,10 @@ export default function DashboardPage() {
               <CardTitle className="text-[12px] font-medium text-muted-foreground">
                 Total products
               </CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" strokeWidth={1} />
+              <Package
+                className="h-4 w-4 text-muted-foreground"
+                strokeWidth={1}
+              />
             </CardHeader>
             <CardContent className="px-5 pb-5">
               <div className="text-2xl font-bold">{products.total}</div>
@@ -155,7 +185,10 @@ export default function DashboardPage() {
               <CardTitle className="text-[12px] font-medium text-muted-foreground">
                 Challans today
               </CardTitle>
-              <FileText className="h-4 w-4 text-muted-foreground" strokeWidth={1} />
+              <FileText
+                className="h-4 w-4 text-muted-foreground"
+                strokeWidth={1}
+              />
             </CardHeader>
             <CardContent className="px-5 pb-5">
               <div className="text-2xl font-bold">{challans.todayCount}</div>
@@ -168,7 +201,10 @@ export default function DashboardPage() {
               <CardTitle className="text-[12px] font-medium text-muted-foreground">
                 Pending drafts
               </CardTitle>
-              <AlertTriangle className="h-4 w-4 text-muted-foreground" strokeWidth={1} />
+              <AlertTriangle
+                className="h-4 w-4 text-muted-foreground"
+                strokeWidth={1}
+              />
             </CardHeader>
             <CardContent className="px-5 pb-5">
               <div className="text-2xl font-bold">{challans.draft}</div>
@@ -184,8 +220,12 @@ export default function DashboardPage() {
         {/* Charts */}
         <Card className="bg-card shadow-sm border-[0.5px] border-border/50 rounded-2xl">
           <CardHeader className="px-5 pt-5 pb-2">
-            <CardTitle className="text-[12px] font-medium text-muted-foreground">Challan distribution</CardTitle>
-            <CardDescription className="text-[13px] leading-tight">Current state of all challans</CardDescription>
+            <CardTitle className="text-[12px] font-medium text-muted-foreground">
+              Challan distribution
+            </CardTitle>
+            <CardDescription className="text-[13px] leading-tight">
+              Current state of all challans
+            </CardDescription>
           </CardHeader>
           <CardContent className="px-5 pb-5">
             <div className="h-[250px] w-full">
@@ -199,8 +239,12 @@ export default function DashboardPage() {
 
         <Card className="bg-card shadow-sm border-[0.5px] border-border/50 rounded-2xl">
           <CardHeader className="px-5 pt-5 pb-2">
-            <CardTitle className="text-[12px] font-medium text-muted-foreground">Customer status</CardTitle>
-            <CardDescription className="text-[13px] leading-tight">Breakdown of customer base</CardDescription>
+            <CardTitle className="text-[12px] font-medium text-muted-foreground">
+              Customer status
+            </CardTitle>
+            <CardDescription className="text-[13px] leading-tight">
+              Breakdown of customer base
+            </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center px-5 pb-5">
             <div className="h-[250px] w-full">
@@ -218,7 +262,8 @@ export default function DashboardPage() {
         <Card className="flex flex-col bg-card shadow-sm border-[0.5px] border-border/50 rounded-2xl">
           <CardHeader className="px-5 pt-5 pb-2">
             <CardTitle className="flex items-center text-destructive text-[12px] font-medium">
-              <AlertTriangle className="mr-2 h-4 w-4" strokeWidth={1} /> Low stock items
+              <AlertTriangle className="mr-2 h-4 w-4" strokeWidth={1} /> Low
+              stock items
             </CardTitle>
             <CardDescription className="text-[13px] leading-tight">
               Products at or below their minimum stock threshold.
@@ -227,7 +272,10 @@ export default function DashboardPage() {
           <CardContent className="flex-1 px-5 pb-5">
             {lowStockItems.length === 0 ? (
               <div className="text-center py-10 text-muted-foreground">
-                <Package className="h-10 w-10 mx-auto text-muted-foreground/30 mb-2" strokeWidth={1} />
+                <Package
+                  className="h-10 w-10 mx-auto text-muted-foreground/30 mb-2"
+                  strokeWidth={1}
+                />
                 No low stock items. All good!
               </div>
             ) : (
@@ -238,7 +286,9 @@ export default function DashboardPage() {
                     className="flex items-center justify-between border-b-[0.5px] border-border/50 pb-2 last:border-0 last:pb-0"
                   >
                     <div>
-                      <p className="font-medium text-[13px] leading-tight">{item.name}</p>
+                      <p className="font-medium text-[13px] leading-tight">
+                        {item.name}
+                      </p>
                       <p className="text-xs text-muted-foreground leading-tight">
                         SKU: {item.sku}
                       </p>
@@ -274,7 +324,8 @@ export default function DashboardPage() {
         <Card className="flex flex-col bg-card shadow-sm border-[0.5px] border-border/50 rounded-2xl">
           <CardHeader className="px-5 pt-5 pb-2">
             <CardTitle className="flex items-center text-amber-500 text-[12px] font-medium">
-              <CalendarCheck className="mr-2 h-4 w-4" strokeWidth={1} /> Follow-ups due
+              <CalendarCheck className="mr-2 h-4 w-4" strokeWidth={1} />{" "}
+              Follow-ups due
             </CardTitle>
             <CardDescription className="text-[13px] leading-tight">
               Customers requiring attention this week.
@@ -283,7 +334,10 @@ export default function DashboardPage() {
           <CardContent className="flex-1 px-5 pb-5">
             {followUpsDue.length === 0 ? (
               <div className="text-center py-10 text-muted-foreground">
-                <TrendingUp className="h-10 w-10 mx-auto text-muted-foreground/30 mb-2" strokeWidth={1} />
+                <TrendingUp
+                  className="h-10 w-10 mx-auto text-muted-foreground/30 mb-2"
+                  strokeWidth={1}
+                />
                 No pending follow-ups. Great job!
               </div>
             ) : (
@@ -294,7 +348,9 @@ export default function DashboardPage() {
                     className="flex items-center justify-between border-b-[0.5px] border-border/50 pb-2 last:border-0 last:pb-0"
                   >
                     <div>
-                      <p className="font-medium text-[13px] leading-tight">{customer.name}</p>
+                      <p className="font-medium text-[13px] leading-tight">
+                        {customer.name}
+                      </p>
                       <p className="text-xs text-muted-foreground leading-tight">
                         {customer.businessName || "N/A"}
                       </p>

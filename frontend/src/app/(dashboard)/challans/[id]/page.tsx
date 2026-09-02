@@ -165,7 +165,11 @@ export default function ChallanDetailPage() {
         <div className="flex items-center space-x-4">
           <Link
             href="/challans"
-            className={buttonVariants({ variant: "ghost", size: "icon", className: "rounded-[10px]" })}
+            className={buttonVariants({
+              variant: "ghost",
+              size: "icon",
+              className: "rounded-[10px]",
+            })}
           >
             <ArrowLeft className="h-5 w-5" strokeWidth={1} />
           </Link>
@@ -173,7 +177,11 @@ export default function ChallanDetailPage() {
             <h1 className="text-2xl font-bold text-ink flex items-center gap-3">
               Challan{" "}
               {challan.challanNumber ? `#${challan.challanNumber}` : "(Draft)"}
-              {isDraft && <Badge variant="secondary" className="rounded-[6px]">Draft</Badge>}
+              {isDraft && (
+                <Badge variant="secondary" className="rounded-[6px]">
+                  Draft
+                </Badge>
+              )}
               {isConfirmed && (
                 <Badge
                   variant="default"
@@ -182,7 +190,11 @@ export default function ChallanDetailPage() {
                   Confirmed
                 </Badge>
               )}
-              {isCancelled && <Badge variant="destructive" className="rounded-[6px]">Cancelled</Badge>}
+              {isCancelled && (
+                <Badge variant="destructive" className="rounded-[6px]">
+                  Cancelled
+                </Badge>
+              )}
             </h1>
             <p className="text-[13px] leading-tight text-muted-foreground mt-1">
               Created on{" "}
@@ -194,7 +206,10 @@ export default function ChallanDetailPage() {
         <div className="flex flex-wrap gap-2">
           {canEdit && (
             <Link href={`/challans/${id}/edit`}>
-              <Button variant="outline" className="rounded-[10px] h-9 shadow-sm border-[0.5px] border-border/50">
+              <Button
+                variant="outline"
+                className="rounded-[10px] h-9 shadow-sm border-[0.5px] border-border/50"
+              >
                 <Edit className="h-4 w-4 mr-2" strokeWidth={1} /> Edit draft
               </Button>
             </Link>
@@ -205,7 +220,8 @@ export default function ChallanDetailPage() {
               disabled={isConfirming}
               className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-[10px] h-9 shadow-sm"
             >
-              <CheckCircle2 className="h-4 w-4 mr-2" strokeWidth={1} /> Confirm & issue
+              <CheckCircle2 className="h-4 w-4 mr-2" strokeWidth={1} /> Confirm
+              & issue
             </Button>
           )}
           {canCancelUser && !isCancelled && (
@@ -218,7 +234,11 @@ export default function ChallanDetailPage() {
               <Trash2 className="h-4 w-4 mr-2" strokeWidth={1} /> Cancel challan
             </Button>
           )}
-          <Button variant="outline" onClick={handleDownloadPDF} className="rounded-[10px] h-9 shadow-sm border-[0.5px] border-border/50">
+          <Button
+            variant="outline"
+            onClick={handleDownloadPDF}
+            className="rounded-[10px] h-9 shadow-sm border-[0.5px] border-border/50"
+          >
             <Download className="h-4 w-4 mr-2" strokeWidth={1} /> Download PDF
           </Button>
         </div>
@@ -262,10 +282,18 @@ export default function ChallanDetailPage() {
           <Table>
             <TableHeader>
               <TableRow className="bg-canvas/50 hover:bg-canvas/50 border-b-[0.5px] border-border/50">
-                <TableHead className="w-[50px] text-center text-[12px] font-medium text-muted-foreground tracking-wider">#</TableHead>
-                <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Item Details</TableHead>
-                <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider">Quantity</TableHead>
-                <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider">Rate</TableHead>
+                <TableHead className="w-[50px] text-center text-[12px] font-medium text-muted-foreground tracking-wider">
+                  #
+                </TableHead>
+                <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">
+                  Item Details
+                </TableHead>
+                <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider">
+                  Quantity
+                </TableHead>
+                <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider">
+                  Rate
+                </TableHead>
                 <TableHead className="text-right pr-6 md:pr-10 text-[12px] font-medium text-muted-foreground tracking-wider">
                   Amount
                 </TableHead>
@@ -273,17 +301,24 @@ export default function ChallanDetailPage() {
             </TableHeader>
             <TableBody>
               {challan.items?.map((item, index) => (
-                <TableRow key={item.id} className="border-b-[0.5px] border-border/50">
+                <TableRow
+                  key={item.id}
+                  className="border-b-[0.5px] border-border/50"
+                >
                   <TableCell className="text-center text-[13px] leading-tight text-muted-foreground">
                     {index + 1}
                   </TableCell>
                   <TableCell>
-                    <div className="font-medium text-[13px] leading-tight">{item.productName}</div>
+                    <div className="font-medium text-[13px] leading-tight">
+                      {item.productName}
+                    </div>
                     <div className="text-xs text-muted-foreground leading-tight">
                       SKU: {item.sku}
                     </div>
                   </TableCell>
-                  <TableCell className="text-right text-[13px] leading-tight">{item.quantity}</TableCell>
+                  <TableCell className="text-right text-[13px] leading-tight">
+                    {item.quantity}
+                  </TableCell>
                   <TableCell className="text-right text-[13px] leading-tight">
                     ₹{parseFloat(item.unitPrice).toFixed(2)}
                   </TableCell>
@@ -312,7 +347,9 @@ export default function ChallanDetailPage() {
             <h3 className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider mb-2">
               Notes / Terms
             </h3>
-            <p className="text-[13px] leading-tight whitespace-pre-wrap">{challan.notes}</p>
+            <p className="text-[13px] leading-tight whitespace-pre-wrap">
+              {challan.notes}
+            </p>
           </div>
         )}
       </Card>

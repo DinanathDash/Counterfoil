@@ -40,7 +40,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Plus, AlertCircle, ArrowUpDown } from "lucide-react";
+import { MoreHorizontal, Plus, AlertCircle, Search } from "lucide-react";
 
 export default function ProductListPage() {
   const queryClient = useQueryClient();
@@ -129,14 +129,21 @@ export default function ProductListPage() {
           </p>
         </div>
         {canCreate && (
-          <Button onClick={openCreateModal} className="rounded-[10px] h-9 shadow-sm">
+          <Button
+            onClick={openCreateModal}
+            className="rounded-[10px] h-9 shadow-sm"
+          >
             <Plus className="mr-2 h-4 w-4" strokeWidth={1} /> Add product
           </Button>
         )}
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-card p-4 shadow-sm border-[0.5px] border-border/50 rounded-2xl">
-        <div className="w-full sm:w-1/3">
+        <div className="w-full sm:w-1/3 relative">
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+            strokeWidth={1}
+          />
           <Input
             placeholder="Search products by Name or SKU..."
             value={searchTerm}
@@ -161,7 +168,10 @@ export default function ProductListPage() {
             htmlFor="low-stock"
             className="flex items-center cursor-pointer text-[13px] leading-tight"
           >
-            <AlertCircle className="w-4 h-4 mr-2 text-destructive" strokeWidth={1} />
+            <AlertCircle
+              className="w-4 h-4 mr-2 text-destructive"
+              strokeWidth={1}
+            />
             Low stock only
           </Label>
         </div>
@@ -171,24 +181,49 @@ export default function ProductListPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-canvas/50 border-b-[0.5px] border-border/50 hover:bg-canvas/50">
-              <TableHead className="w-[100px] text-[12px] font-medium text-muted-foreground tracking-wider pl-5">SKU</TableHead>
-              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Product Info</TableHead>
-              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Price</TableHead>
-              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Stock</TableHead>
-              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Location</TableHead>
-              <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider pr-5">Actions</TableHead>
+              <TableHead className="w-[100px] text-[12px] font-medium text-muted-foreground tracking-wider pl-5">
+                SKU
+              </TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">
+                Product Info
+              </TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">
+                Price
+              </TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">
+                Stock
+              </TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">
+                Location
+              </TableHead>
+              <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider pr-5">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i} className="border-b-[0.5px] border-border/50">
-                  <TableCell className="pl-5"><Skeleton className="h-4 w-16" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-32 mb-1" /><Skeleton className="h-3 w-20" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-12" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                  <TableCell className="pr-5"><Skeleton className="h-8 w-8 ml-auto" /></TableCell>
+                  <TableCell className="pl-5">
+                    <Skeleton className="h-4 w-16" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-32 mb-1" />
+                    <Skeleton className="h-3 w-20" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-16" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-12" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-16" />
+                  </TableCell>
+                  <TableCell className="pr-5">
+                    <Skeleton className="h-8 w-8 ml-auto" />
+                  </TableCell>
                 </TableRow>
               ))
             ) : data?.data.length === 0 ? (
@@ -202,12 +237,17 @@ export default function ProductListPage() {
               </TableRow>
             ) : (
               data?.data.map((product) => (
-                <TableRow key={product.id} className="hover:bg-canvas/50 transition-colors border-b-[0.5px] border-border/50">
+                <TableRow
+                  key={product.id}
+                  className="hover:bg-canvas/50 transition-colors border-b-[0.5px] border-border/50"
+                >
                   <TableCell className="font-mono text-[13px] leading-tight pl-5">
                     {product.sku}
                   </TableCell>
                   <TableCell>
-                    <div className="font-medium text-ink text-[13px] leading-tight">{product.name}</div>
+                    <div className="font-medium text-ink text-[13px] leading-tight">
+                      {product.name}
+                    </div>
                     <div className="text-xs text-muted-foreground leading-tight mt-0.5">
                       {product.category}
                     </div>
@@ -239,15 +279,23 @@ export default function ProductListPage() {
                     <DropdownMenu>
                       <DropdownMenuTrigger
                         render={
-                          <Button variant="ghost" className="h-8 w-8 p-0 rounded-[8px]" />
+                          <Button
+                            variant="ghost"
+                            className="h-8 w-8 p-0 rounded-[8px]"
+                          />
                         }
                       >
                         <span className="sr-only">Open menu</span>
                         <MoreHorizontal className="h-4 w-4" strokeWidth={1} />
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="rounded-[10px] shadow-sm border-[0.5px] border-border/50">
+                      <DropdownMenuContent
+                        align="end"
+                        className="rounded-[10px] shadow-sm border-[0.5px] border-border/50"
+                      >
                         <DropdownMenuGroup>
-                          <DropdownMenuLabel className="text-[12px] text-muted-foreground">Actions</DropdownMenuLabel>
+                          <DropdownMenuLabel className="text-[12px] text-muted-foreground">
+                            Actions
+                          </DropdownMenuLabel>
                           <DropdownMenuItem
                             render={
                               <Link
@@ -271,7 +319,7 @@ export default function ProductListPage() {
                                 onClick={() => handleAdjustStock(product)}
                                 className="cursor-pointer text-[13px]"
                               >
-                                <ArrowUpDown className="mr-2 h-4 w-4" strokeWidth={1} /> Adjust stock
+                                Adjust stock
                               </DropdownMenuItem>
                             </>
                           )}

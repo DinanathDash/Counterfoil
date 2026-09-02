@@ -11,7 +11,11 @@ export default function NewChallanPage() {
       <div className="flex items-center space-x-4">
         <Link
           href="/challans"
-          className={buttonVariants({ variant: "ghost", size: "icon", className: "rounded-[10px]" })}
+          className={buttonVariants({
+            variant: "ghost",
+            size: "icon",
+            className: "rounded-[10px]",
+          })}
         >
           <ArrowLeft className="h-5 w-5" strokeWidth={1} />
         </Link>

@@ -129,7 +129,11 @@ export default function CustomerDetailPage() {
         <div className="flex items-center space-x-4">
           <Link
             href="/customers"
-            className={buttonVariants({ variant: "ghost", size: "icon", className: "rounded-[10px]" })}
+            className={buttonVariants({
+              variant: "ghost",
+              size: "icon",
+              className: "rounded-[10px]",
+            })}
           >
             <ArrowLeft className="h-5 w-5" strokeWidth={1} />
           </Link>
@@ -153,7 +157,11 @@ export default function CustomerDetailPage() {
 
         <div className="flex space-x-2">
           {canEdit && (
-            <Button variant="outline" onClick={() => setIsEditModalOpen(true)} className="rounded-[10px] h-9 shadow-sm border-[0.5px] border-border/50">
+            <Button
+              variant="outline"
+              onClick={() => setIsEditModalOpen(true)}
+              className="rounded-[10px] h-9 shadow-sm border-[0.5px] border-border/50"
+            >
               <Edit2 className="h-4 w-4 mr-2" strokeWidth={1} /> Edit
             </Button>
           )}
@@ -176,34 +184,51 @@ export default function CustomerDetailPage() {
         <div className="col-span-1 space-y-6">
           <Card className="shadow-sm border-[0.5px] border-border/50 rounded-2xl bg-card">
             <CardHeader className="pb-3 border-b-[0.5px] border-border/50 bg-canvas/30">
-              <CardTitle className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider">Contact Information</CardTitle>
+              <CardTitle className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider">
+                Contact Information
+              </CardTitle>
             </CardHeader>
             <CardContent className="pt-4 space-y-4">
               {customer.businessName && (
                 <div className="flex items-start text-[13px] leading-tight">
-                  <Building className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" strokeWidth={1} />
+                  <Building
+                    className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0"
+                    strokeWidth={1}
+                  />
                   <span className="text-ink">{customer.businessName}</span>
                 </div>
               )}
               <div className="flex items-start text-[13px] leading-tight">
-                <Phone className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" strokeWidth={1} />
+                <Phone
+                  className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0"
+                  strokeWidth={1}
+                />
                 <span className="text-ink">{customer.mobile}</span>
               </div>
               {customer.email && (
                 <div className="flex items-start text-[13px] leading-tight">
-                  <Mail className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" strokeWidth={1} />
+                  <Mail
+                    className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0"
+                    strokeWidth={1}
+                  />
                   <span className="text-ink">{customer.email}</span>
                 </div>
               )}
               {customer.address && (
                 <div className="flex items-start text-[13px] leading-tight">
-                  <MapPin className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" strokeWidth={1} />
+                  <MapPin
+                    className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0"
+                    strokeWidth={1}
+                  />
                   <span className="text-ink">{customer.address}</span>
                 </div>
               )}
               {customer.gstin && (
                 <div className="flex items-start text-[13px] leading-tight">
-                  <Hash className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" strokeWidth={1} />
+                  <Hash
+                    className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0"
+                    strokeWidth={1}
+                  />
                   <div>
                     <span className="text-muted block text-[12px]">GSTIN</span>
                     <span className="text-ink">{customer.gstin}</span>
@@ -211,7 +236,10 @@ export default function CustomerDetailPage() {
                 </div>
               )}
               <div className="flex items-start text-[13px] leading-tight pt-4 border-t-[0.5px] border-border/50">
-                <CreditCard className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" strokeWidth={1} />
+                <CreditCard
+                  className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0"
+                  strokeWidth={1}
+                />
                 <div>
                   <span className="text-muted block text-[12px]">
                     Credit Limit / Balance
@@ -226,7 +254,9 @@ export default function CustomerDetailPage() {
 
           <Card className="shadow-sm border-[0.5px] border-border/50 rounded-2xl bg-card">
             <CardHeader className="pb-3 border-b-[0.5px] border-border/50 bg-canvas/30">
-              <CardTitle className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider">Recent Challans</CardTitle>
+              <CardTitle className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider">
+                Recent Challans
+              </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               {recentChallans && recentChallans.length > 0 ? (
@@ -281,7 +311,9 @@ export default function CustomerDetailPage() {
 
           <Card className="shadow-sm border-[0.5px] border-border/50 rounded-2xl bg-card">
             <CardHeader className="pb-3 border-b-[0.5px] border-border/50 bg-canvas/30">
-              <CardTitle className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider">Timeline & Notes</CardTitle>
+              <CardTitle className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider">
+                Timeline & Notes
+              </CardTitle>
             </CardHeader>
             <CardContent className="pt-6">
               {recentNotes && recentNotes.length > 0 ? (

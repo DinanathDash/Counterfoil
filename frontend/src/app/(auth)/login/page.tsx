@@ -9,16 +9,29 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { AuthResponse } from "@/types/api";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+  InputGroupButton,
+} from "@/components/ui/input-group";
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  User,
+  Shield,
+  Briefcase,
+  Zap,
+  ArrowRight,
+  Activity,
+  Command,
+} from "lucide-react";
+import Image from "next/image";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -30,12 +43,14 @@ type LoginForm = z.infer<typeof loginSchema>;
 export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const login = useAuthStore((state) => state.login);
   const router = useRouter();
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -63,17 +78,94 @@ export default function LoginPage() {
     }
   };
 
+  const fillDummy = (email: string, pass: string) => {
+    setValue("email", email, { shouldValidate: true });
+    setValue("password", pass, { shouldValidate: true });
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-canvas p-4">
-      <Card className="w-full max-w-sm shadow-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-ink">Sign in</CardTitle>
-          <CardDescription className="text-muted">
-            Enter your email and password to access your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+    <div className="min-h-screen flex w-full">
+      {/* Left Panel */}
+      <div className="w-full lg:w-1/2 flex flex-col justify-between p-6 sm:p-12 xl:p-16 bg-white min-h-screen">
+        {/* Header Logo */}
+        <div>
+          <div className="flex items-center gap-2 font-bold text-xl text-ink">
+            <Command className="w-6 h-6" />
+            Counterfoil
+          </div>
+        </div>
+
+        {/* Form Container */}
+        <div className="w-full max-w-sm mx-auto flex-1 flex flex-col justify-center my-12">
+          <div className="text-center mb-8">
+            <div className="w-[72px] h-[72px] bg-neutral-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-neutral-100/60 ring-8 ring-neutral-50/50">
+              <User className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <h1 className="text-2xl font-semibold text-ink mb-2">
+              Login to your account
+            </h1>
+            <p className="text-muted-foreground text-sm">
+              Enter your details to login.
+            </p>
+          </div>
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {/* Dummy Login Quick Buttons */}
+            <div className="grid grid-cols-4 gap-3 mb-2">
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() =>
+                  fillDummy("admin@counterfoil.app", "Password@123")
+                }
+                className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors"
+                title="Admin Account"
+              >
+                <Shield className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() =>
+                  fillDummy("manager@counterfoil.app", "Password@123")
+                }
+                className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors"
+                title="Manager Account"
+              >
+                <Briefcase className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() =>
+                  fillDummy("user@counterfoil.app", "Password@123")
+                }
+                className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors"
+                title="Standard User"
+              >
+                <User className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() =>
+                  fillDummy("demo@counterfoil.app", "Password@123")
+                }
+                className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors"
+                title="Demo Guest"
+              >
+                <Zap className="w-4 h-4" />
+              </Button>
+            </div>
+
+            <div className="flex items-center gap-4 py-3">
+              <div className="flex-1 h-px bg-neutral-100"></div>
+              <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
+                OR
+              </span>
+              <div className="flex-1 h-px bg-neutral-100"></div>
+            </div>
+
             {error && (
               <div className="p-3 text-sm font-medium text-destructive bg-destructive/10 rounded-md">
                 {error}
@@ -81,13 +173,22 @@ export default function LoginPage() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                {...register("email")}
-              />
+              <Label htmlFor="email" className="text-sm font-medium">
+                Email Address<span className="text-blue-500">*</span>
+              </Label>
+              <InputGroup className="h-11 rounded-lg border-neutral-200">
+                <InputGroupAddon>
+                  <InputGroupText>
+                    <Mail />
+                  </InputGroupText>
+                </InputGroupAddon>
+                <InputGroupInput
+                  id="email"
+                  type="email"
+                  placeholder="hello@counterfoil.app"
+                  {...register("email")}
+                />
+              </InputGroup>
               {errors.email && (
                 <p className="text-xs text-destructive">
                   {errors.email.message}
@@ -96,8 +197,33 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" {...register("password")} />
+              <Label htmlFor="password" className="text-sm font-medium">
+                Password<span className="text-blue-500">*</span>
+              </Label>
+              <InputGroup className="h-11 rounded-lg border-neutral-200">
+                <InputGroupAddon>
+                  <InputGroupText>
+                    <Lock />
+                  </InputGroupText>
+                </InputGroupAddon>
+                <InputGroupInput
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••••••"
+                  {...register("password")}
+                />
+                <InputGroupAddon align="inline-end">
+                  <InputGroupButton
+                    type="button"
+                    variant="ghost"
+                    size="icon-xs"
+                    className="text-muted-foreground hover:text-ink h-8 w-8"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff /> : <Eye />}
+                  </InputGroupButton>
+                </InputGroupAddon>
+              </InputGroup>
               {errors.password && (
                 <p className="text-xs text-destructive">
                   {errors.password.message}
@@ -105,23 +231,79 @@ export default function LoginPage() {
               )}
             </div>
 
+            <div className="flex items-center justify-between pt-1 pb-4">
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="keepLogged"
+                  className="w-4 h-4 rounded border-neutral-300 text-ink focus:ring-ink focus:ring-offset-0 transition-colors"
+                />
+                <Label
+                  htmlFor="keepLogged"
+                  className="text-sm font-normal cursor-pointer"
+                >
+                  Keep me logged in
+                </Label>
+              </div>
+              <a
+                href="#"
+                className="text-sm font-medium text-ink hover:underline decoration-neutral-400 underline-offset-4"
+              >
+                Forgot password?
+              </a>
+            </div>
+
             <Button
               type="submit"
-              className="w-full bg-accent hover:bg-accent/90"
+              className="w-full h-11 bg-ink text-white hover:bg-ink/90 rounded-lg text-sm font-medium shadow-sm transition-all"
               disabled={loading}
             >
-              {loading ? "Signing in..." : "Sign in"}
+              {loading ? "Signing in..." : "Login"}
             </Button>
-
-            <div className="text-xs text-center text-muted mt-4">
-              Demo accounts use{" "}
-              <span className="font-mono bg-canvas px-1 py-0.5 rounded">
-                Password@123
-              </span>
-            </div>
           </form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+
+      {/* Right Panel (Hidden on mobile) */}
+      <div className="hidden lg:flex w-1/2 bg-[#f9fafb] relative items-center justify-center p-16 overflow-hidden border-l border-neutral-100">
+        {/* Subtle grid background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+
+        {/* Glowing orb effect */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white rounded-full blur-[100px] opacity-60"></div>
+
+        <div className="relative z-10 max-w-lg w-full">
+          <div className="mb-8">
+            <Image
+              src="https://i.pravatar.cc/150?img=24"
+              alt="Wei Chen"
+              width={48}
+              height={48}
+              className="w-12 h-12 rounded-full ring-4 ring-white shadow-sm object-cover"
+            />
+          </div>
+
+          <h2 className="text-[32px] lg:text-[40px] font-medium text-ink leading-[1.15] tracking-tight mb-8">
+            Counterfoil has transformed our daily operations.{" "}
+            <span className="text-muted-foreground">
+              Its seamless integration of CRM, inventory, and sales orders
+              ensures our stock is always perfectly synced.
+            </span>
+          </h2>
+
+          <div>
+            <p className="font-semibold text-ink text-[15px]">Sarah Jenkins</p>
+            <p className="text-muted-foreground text-sm">Operations Director</p>
+          </div>
+
+          {/* Dots indicator */}
+          <div className="flex gap-2 mt-12">
+            <div className="w-5 h-1.5 bg-ink rounded-full"></div>
+            <div className="w-1.5 h-1.5 bg-neutral-300 rounded-full"></div>
+            <div className="w-1.5 h-1.5 bg-neutral-300 rounded-full"></div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

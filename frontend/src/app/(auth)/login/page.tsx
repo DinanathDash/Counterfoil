@@ -26,7 +26,8 @@ import {
   User,
   Shield,
   Briefcase,
-  Zap,
+  Package,
+  Calculator,
   Command,
 } from "lucide-react";
 import Image from "next/image";
@@ -119,7 +120,7 @@ export default function LoginPage() {
                 variant="outline"
                 type="button"
                 onClick={() =>
-                  fillDummy("admin@counterfoil.app", "Password@123")
+                  fillDummy("admin@erp.test", "Password@123")
                 }
                 className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors flex items-center justify-center gap-2"
                 title="Admin Account"
@@ -131,37 +132,37 @@ export default function LoginPage() {
                 variant="outline"
                 type="button"
                 onClick={() =>
-                  fillDummy("manager@counterfoil.app", "Password@123")
+                  fillDummy("sales@erp.test", "Password@123")
                 }
                 className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors flex items-center justify-center gap-2"
-                title="Manager Account"
+                title="Sales Account"
               >
                 <Briefcase className="w-4 h-4" />
-                <span className="text-sm font-medium">Manager</span>
+                <span className="text-sm font-medium">Sales</span>
               </Button>
               <Button
                 variant="outline"
                 type="button"
                 onClick={() =>
-                  fillDummy("user@counterfoil.app", "Password@123")
+                  fillDummy("warehouse@erp.test", "Password@123")
                 }
                 className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors flex items-center justify-center gap-2"
-                title="Standard User"
+                title="Warehouse Account"
               >
-                <User className="w-4 h-4" />
-                <span className="text-sm font-medium">User</span>
+                <Package className="w-4 h-4" />
+                <span className="text-sm font-medium">Warehouse</span>
               </Button>
               <Button
                 variant="outline"
                 type="button"
                 onClick={() =>
-                  fillDummy("demo@counterfoil.app", "Password@123")
+                  fillDummy("accounts@erp.test", "Password@123")
                 }
                 className="h-11 border-neutral-200 hover:bg-neutral-50 text-muted-foreground hover:text-ink transition-colors flex items-center justify-center gap-2"
-                title="Demo Guest"
+                title="Accounts Account"
               >
-                <Zap className="w-4 h-4" />
-                <span className="text-sm font-medium">Guest</span>
+                <Calculator className="w-4 h-4" />
+                <span className="text-sm font-medium">Accounts</span>
               </Button>
             </div>
 

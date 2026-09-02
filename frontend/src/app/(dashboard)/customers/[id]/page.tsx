@@ -124,14 +124,14 @@ export default function CustomerDetailPage() {
   const { customer, recentNotes, recentChallans } = data;
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="pb-8 tracking-[0.01em] space-y-8 max-w-5xl mx-auto">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Link
             href="/customers"
-            className={buttonVariants({ variant: "ghost", size: "icon" })}
+            className={buttonVariants({ variant: "ghost", size: "icon", className: "rounded-[10px]" })}
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft className="h-5 w-5" strokeWidth={1} />
           </Link>
           <h1 className="text-2xl font-bold text-ink">{customer.name}</h1>
           <Badge
@@ -142,28 +142,29 @@ export default function CustomerDetailPage() {
                   ? "secondary"
                   : "outline"
             }
+            className="rounded-[6px]"
           >
             {customer.status}
           </Badge>
-          <Badge variant="outline" className="bg-canvas">
+          <Badge variant="outline" className="bg-canvas rounded-[6px]">
             {customer.type}
           </Badge>
         </div>
 
         <div className="flex space-x-2">
           {canEdit && (
-            <Button variant="outline" onClick={() => setIsEditModalOpen(true)}>
-              <Edit2 className="h-4 w-4 mr-2" /> Edit
+            <Button variant="outline" onClick={() => setIsEditModalOpen(true)} className="rounded-[10px] h-9 shadow-sm border-[0.5px] border-border/50">
+              <Edit2 className="h-4 w-4 mr-2" strokeWidth={1} /> Edit
             </Button>
           )}
           {canDelete && (
             <Button
               variant="outline"
-              className="text-destructive hover:bg-destructive/10 border-destructive/20"
+              className="text-destructive hover:bg-destructive/10 border-destructive/20 rounded-[10px] h-9 shadow-sm border-[0.5px]"
               onClick={handleDelete}
               disabled={isDeleting}
             >
-              <Trash2 className="h-4 w-4 mr-2" />{" "}
+              <Trash2 className="h-4 w-4 mr-2" strokeWidth={1} />{" "}
               {isDeleting ? "Deleting..." : "Delete"}
             </Button>
           )}
@@ -173,46 +174,46 @@ export default function CustomerDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Profile & Challans */}
         <div className="col-span-1 space-y-6">
-          <Card className="shadow-sm">
-            <CardHeader className="pb-3 border-b border-line bg-canvas/30">
-              <CardTitle className="text-lg">Contact Information</CardTitle>
+          <Card className="shadow-sm border-[0.5px] border-border/50 rounded-2xl bg-card">
+            <CardHeader className="pb-3 border-b-[0.5px] border-border/50 bg-canvas/30">
+              <CardTitle className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider">Contact Information</CardTitle>
             </CardHeader>
             <CardContent className="pt-4 space-y-4">
               {customer.businessName && (
-                <div className="flex items-start text-sm">
-                  <Building className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" />
+                <div className="flex items-start text-[13px] leading-tight">
+                  <Building className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" strokeWidth={1} />
                   <span className="text-ink">{customer.businessName}</span>
                 </div>
               )}
-              <div className="flex items-start text-sm">
-                <Phone className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" />
+              <div className="flex items-start text-[13px] leading-tight">
+                <Phone className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" strokeWidth={1} />
                 <span className="text-ink">{customer.mobile}</span>
               </div>
               {customer.email && (
-                <div className="flex items-start text-sm">
-                  <Mail className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" />
+                <div className="flex items-start text-[13px] leading-tight">
+                  <Mail className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" strokeWidth={1} />
                   <span className="text-ink">{customer.email}</span>
                 </div>
               )}
               {customer.address && (
-                <div className="flex items-start text-sm">
-                  <MapPin className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" />
+                <div className="flex items-start text-[13px] leading-tight">
+                  <MapPin className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" strokeWidth={1} />
                   <span className="text-ink">{customer.address}</span>
                 </div>
               )}
               {customer.gstin && (
-                <div className="flex items-start text-sm">
-                  <Hash className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" />
+                <div className="flex items-start text-[13px] leading-tight">
+                  <Hash className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" strokeWidth={1} />
                   <div>
-                    <span className="text-muted block text-xs">GSTIN</span>
+                    <span className="text-muted block text-[12px]">GSTIN</span>
                     <span className="text-ink">{customer.gstin}</span>
                   </div>
                 </div>
               )}
-              <div className="flex items-start text-sm pt-2 border-t border-line">
-                <CreditCard className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" />
+              <div className="flex items-start text-[13px] leading-tight pt-4 border-t-[0.5px] border-border/50">
+                <CreditCard className="h-4 w-4 text-muted mr-3 mt-0.5 shrink-0" strokeWidth={1} />
                 <div>
-                  <span className="text-muted block text-xs">
+                  <span className="text-muted block text-[12px]">
                     Credit Limit / Balance
                   </span>
                   <span className="text-ink font-medium font-mono tabular-nums">
@@ -223,13 +224,13 @@ export default function CustomerDetailPage() {
             </CardContent>
           </Card>
 
-          <Card className="shadow-sm">
-            <CardHeader className="pb-3 border-b border-line bg-canvas/30">
-              <CardTitle className="text-lg">Recent Challans</CardTitle>
+          <Card className="shadow-sm border-[0.5px] border-border/50 rounded-2xl bg-card">
+            <CardHeader className="pb-3 border-b-[0.5px] border-border/50 bg-canvas/30">
+              <CardTitle className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider">Recent Challans</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               {recentChallans && recentChallans.length > 0 ? (
-                <div className="divide-y divide-line">
+                <div className="divide-y divide-border/50 border-t-0">
                   {recentChallans.map((challan) => (
                     <div
                       key={challan.id}
@@ -238,22 +239,22 @@ export default function CustomerDetailPage() {
                       <div className="flex justify-between items-center mb-1">
                         <Link
                           href={`/challans/${challan.id}`}
-                          className="text-sm font-medium text-accent hover:underline"
+                          className="text-[13px] font-medium text-accent hover:underline leading-tight"
                         >
                           {challan.challanNumber || "Draft"}
                         </Link>
                         <Badge
                           variant="outline"
-                          className="text-[10px] uppercase py-0"
+                          className="text-[10px] uppercase py-0 rounded-[6px] border-[0.5px]"
                         >
                           {challan.status}
                         </Badge>
                       </div>
-                      <div className="flex justify-between items-center text-xs text-muted">
+                      <div className="flex justify-between items-center text-[12px] text-muted">
                         <span>
                           {format(new Date(challan.createdAt), "dd MMM yyyy")}
                         </span>
-                        <span className="font-mono tabular-nums">
+                        <span className="font-mono tabular-nums text-ink">
                           ₹{challan.totalAmount}
                         </span>
                       </div>
@@ -261,7 +262,7 @@ export default function CustomerDetailPage() {
                   ))}
                 </div>
               ) : (
-                <div className="p-6 text-center text-sm text-muted">
+                <div className="p-6 text-center text-[13px] text-muted">
                   No challans found for this customer.
                 </div>
               )}
@@ -278,25 +279,25 @@ export default function CustomerDetailPage() {
             />
           )}
 
-          <Card className="shadow-sm">
-            <CardHeader className="pb-3 border-b border-line bg-canvas/30">
-              <CardTitle className="text-lg">Timeline & Notes</CardTitle>
+          <Card className="shadow-sm border-[0.5px] border-border/50 rounded-2xl bg-card">
+            <CardHeader className="pb-3 border-b-[0.5px] border-border/50 bg-canvas/30">
+              <CardTitle className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider">Timeline & Notes</CardTitle>
             </CardHeader>
             <CardContent className="pt-6">
               {recentNotes && recentNotes.length > 0 ? (
-                <div className="relative border-l border-line ml-3 space-y-8 pb-4">
+                <div className="relative border-l-[0.5px] border-border/50 ml-3 space-y-8 pb-4">
                   {recentNotes.map((note) => (
                     <div key={note.id} className="relative pl-6">
                       {/* Timeline dot */}
-                      <span className="absolute -left-1.5 top-1.5 h-3 w-3 rounded-full bg-accent ring-4 ring-surface" />
+                      <span className="absolute -left-1.5 top-1.5 h-3 w-3 rounded-full bg-accent ring-4 ring-card" />
 
-                      <div className="bg-canvas/50 rounded-md p-4 border border-line text-sm">
+                      <div className="bg-canvas/50 rounded-2xl p-4 border-[0.5px] border-border/50 text-[13px] shadow-sm">
                         <div className="flex justify-between items-start mb-2">
                           <div>
-                            <span className="font-semibold text-ink">
+                            <span className="font-medium text-ink">
                               {note.createdBy.name}
                             </span>
-                            <span className="text-muted ml-2 text-xs">
+                            <span className="text-muted ml-2 text-[12px]">
                               {format(
                                 new Date(note.createdAt),
                                 "dd MMM yyyy, HH:mm",
@@ -306,7 +307,7 @@ export default function CustomerDetailPage() {
                           {note.followUpDate && (
                             <Badge
                               variant="secondary"
-                              className="text-xs bg-accent/10 text-accent hover:bg-accent/20"
+                              className="text-[10px] bg-accent/10 text-accent hover:bg-accent/20 rounded-[6px]"
                             >
                               Follow up:{" "}
                               {format(
@@ -316,7 +317,7 @@ export default function CustomerDetailPage() {
                             </Badge>
                           )}
                         </div>
-                        <p className="text-ink whitespace-pre-wrap">
+                        <p className="text-ink whitespace-pre-wrap leading-tight">
                           {note.note}
                         </p>
                       </div>
@@ -324,7 +325,7 @@ export default function CustomerDetailPage() {
                   ))}
                 </div>
               ) : (
-                <div className="py-12 text-center text-muted">
+                <div className="py-12 text-center text-muted text-[13px] leading-tight">
                   <p>No notes or history available.</p>
                 </div>
               )}

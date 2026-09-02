@@ -71,7 +71,7 @@ export default function ChallanListPage() {
         return (
           <Badge
             variant="secondary"
-            className="bg-gray-100 text-gray-800 hover:bg-gray-100"
+            className="bg-gray-100 text-gray-800 hover:bg-gray-100 rounded-[6px]"
           >
             Draft
           </Badge>
@@ -80,41 +80,41 @@ export default function ChallanListPage() {
         return (
           <Badge
             variant="default"
-            className="bg-emerald-600 hover:bg-emerald-700"
+            className="bg-emerald-600 hover:bg-emerald-700 rounded-[6px]"
           >
             Confirmed
           </Badge>
         );
       case "CANCELLED":
-        return <Badge variant="destructive">Cancelled</Badge>;
+        return <Badge variant="destructive" className="rounded-[6px]">Cancelled</Badge>;
       default:
-        return <Badge variant="outline">{status}</Badge>;
+        return <Badge variant="outline" className="rounded-[6px]">{status}</Badge>;
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="pb-8 tracking-[0.01em] space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-ink">
             Sales Challans
           </h1>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-[13px] leading-tight">
             Manage delivery challans and shipments.
           </p>
         </div>
         {canCreate && (
           <Link href="/challans/new">
-            <Button>
-              <Plus className="mr-2 h-4 w-4" /> Create Challan
+            <Button className="rounded-[10px] h-9 shadow-sm">
+              <Plus className="mr-2 h-4 w-4" strokeWidth={1} /> Create challan
             </Button>
           </Link>
         )}
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 items-center bg-card p-4 rounded-xl border shadow-sm">
+      <div className="flex flex-col sm:flex-row gap-4 items-center bg-card p-4 shadow-sm border-[0.5px] border-border/50 rounded-2xl">
         <div className="relative w-full sm:w-80">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" strokeWidth={1} />
           <Input
             placeholder="Search by Challan # or Customer..."
             value={searchTerm}
@@ -122,7 +122,7 @@ export default function ChallanListPage() {
               setSearchTerm(e.target.value);
               setPage(1);
             }}
-            className="pl-9"
+            className="pl-9 h-9 rounded-[10px] shadow-sm border-[0.5px] border-border/50"
           />
         </div>
 
@@ -134,10 +134,10 @@ export default function ChallanListPage() {
               setPage(1);
             }}
           >
-            <SelectTrigger>
+            <SelectTrigger className="h-9 rounded-[10px] shadow-sm border-[0.5px] border-border/50">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-[10px]">
               <SelectItem value="ALL">All Statuses</SelectItem>
               <SelectItem value="DRAFT">Draft</SelectItem>
               <SelectItem value="CONFIRMED">Confirmed</SelectItem>
@@ -147,91 +147,77 @@ export default function ChallanListPage() {
         </div>
       </div>
 
-      <div className="bg-card rounded-xl border shadow-sm overflow-hidden">
+      <div className="bg-card shadow-sm border-[0.5px] border-border/50 rounded-2xl overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-muted/50 hover:bg-muted/50">
-              <TableHead className="w-[120px]">Challan No.</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Customer</TableHead>
-              <TableHead className="text-right">Items</TableHead>
-              <TableHead className="text-right">Total Amount</TableHead>
-              <TableHead className="w-[120px] text-center">Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+            <TableRow className="bg-canvas/50 hover:bg-canvas/50 border-b-[0.5px] border-border/50">
+              <TableHead className="w-[120px] text-[12px] font-medium text-muted-foreground tracking-wider pl-5">Challan No.</TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Date</TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Customer</TableHead>
+              <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider">Items</TableHead>
+              <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider">Total Amount</TableHead>
+              <TableHead className="w-[120px] text-center text-[12px] font-medium text-muted-foreground tracking-wider">Status</TableHead>
+              <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider pr-5">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
-                <TableRow key={i}>
-                  <TableCell>
-                    <Skeleton className="h-4 w-20" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-4 w-24" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-4 w-32" />
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Skeleton className="h-4 w-8 ml-auto" />
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Skeleton className="h-4 w-16 ml-auto" />
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <Skeleton className="h-6 w-16 mx-auto" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-8 w-16 ml-auto" />
-                  </TableCell>
+                <TableRow key={i} className="border-b-[0.5px] border-border/50">
+                  <TableCell className="pl-5"><Skeleton className="h-4 w-20" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                  <TableCell className="text-right"><Skeleton className="h-4 w-8 ml-auto" /></TableCell>
+                  <TableCell className="text-right"><Skeleton className="h-4 w-16 ml-auto" /></TableCell>
+                  <TableCell className="text-center"><Skeleton className="h-6 w-16 mx-auto" /></TableCell>
+                  <TableCell className="pr-5"><Skeleton className="h-8 w-16 ml-auto" /></TableCell>
                 </TableRow>
               ))
             ) : data?.data.length === 0 ? (
-              <TableRow>
+              <TableRow className="border-b-[0.5px] border-border/50">
                 <TableCell
                   colSpan={7}
                   className="text-center py-10 text-muted-foreground"
                 >
-                  <FileText className="h-10 w-10 mx-auto text-muted-foreground/30 mb-3" />
-                  No challans found matching your criteria.
+                  <FileText className="h-10 w-10 mx-auto text-muted-foreground/30 mb-3" strokeWidth={1} />
+                  <span className="text-[13px] leading-tight">No challans found matching your criteria.</span>
                 </TableCell>
               </TableRow>
             ) : (
               data?.data.map((challan) => (
-                <TableRow key={challan.id}>
-                  <TableCell className="font-mono font-medium">
+                <TableRow key={challan.id} className="hover:bg-canvas/50 transition-colors border-b-[0.5px] border-border/50">
+                  <TableCell className="font-mono font-medium text-[13px] leading-tight pl-5">
                     {challan.challanNumber || (
                       <span className="text-muted-foreground text-xs italic">
                         Draft
                       </span>
                     )}
                   </TableCell>
-                  <TableCell className="text-sm">
+                  <TableCell className="text-[13px] leading-tight">
                     {format(new Date(challan.createdAt), "dd MMM yyyy")}
                   </TableCell>
                   <TableCell>
-                    <div className="font-medium text-ink">
+                    <div className="font-medium text-ink text-[13px] leading-tight">
                       {challan.customerName || "Unknown"}
                     </div>
                     {challan.customerBusiness && (
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-xs text-muted-foreground leading-tight mt-0.5">
                         {challan.customerBusiness}
                       </div>
                     )}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right text-[13px] leading-tight">
                     {challan.items?.length || 0}
                   </TableCell>
-                  <TableCell className="text-right font-medium">
+                  <TableCell className="text-right font-medium text-[13px] leading-tight">
                     ₹{parseFloat(challan.totalAmount).toFixed(2)}
                   </TableCell>
                   <TableCell className="text-center">
                     {getStatusBadge(challan.status)}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right pr-5">
                     <Link href={`/challans/${challan.id}`}>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" className="rounded-[8px] h-8 text-[12px]">
                         View
                       </Button>
                     </Link>
@@ -253,12 +239,13 @@ export default function ChallanListPage() {
                 size="sm"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
+                className="rounded-[10px] shadow-sm border-[0.5px] border-border/50"
               >
                 Previous
               </Button>
             </PaginationItem>
             <PaginationItem>
-              <span className="text-sm text-muted-foreground mx-4">
+              <span className="text-[13px] leading-tight text-muted-foreground mx-4">
                 Page {page} of {data.meta.totalPages}
               </span>
             </PaginationItem>
@@ -270,6 +257,7 @@ export default function ChallanListPage() {
                   setPage((p) => Math.min(data.meta.totalPages, p + 1))
                 }
                 disabled={page === data.meta.totalPages}
+                className="rounded-[10px] shadow-sm border-[0.5px] border-border/50"
               >
                 Next
               </Button>

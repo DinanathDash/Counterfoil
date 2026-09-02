@@ -51,19 +51,19 @@ export default function EditChallanPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-12">
+    <div className="pb-8 tracking-[0.01em] space-y-8 max-w-5xl mx-auto">
       <div className="flex items-center space-x-4">
         <Link
           href={`/challans/${id}`}
-          className={buttonVariants({ variant: "ghost", size: "icon" })}
+          className={buttonVariants({ variant: "ghost", size: "icon", className: "rounded-[10px]" })}
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowLeft className="h-5 w-5" strokeWidth={1} />
         </Link>
         <div>
           <h1 className="text-2xl font-bold text-ink">
             Edit Draft: {challan.challanNumber || "Unnumbered"}
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-[13px] leading-tight text-muted-foreground mt-1">
             Make changes before confirming.
           </p>
         </div>

@@ -75,25 +75,25 @@ export default function CustomersPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="pb-8 tracking-[0.01em] space-y-8">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-ink">Customers</h1>
         {canCreate && (
           <Button
             onClick={() => setIsModalOpen(true)}
-            className="bg-accent hover:bg-accent/90 text-white"
+            className="bg-accent hover:bg-accent/90 text-white rounded-[10px] h-9 shadow-sm"
           >
-            <Plus className="h-4 w-4 mr-2" /> Add Customer
+            <Plus className="h-4 w-4 mr-2" strokeWidth={1} /> Add customer
           </Button>
         )}
       </div>
 
       <div className="flex space-x-4">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted" />
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted" strokeWidth={1} />
           <Input
             placeholder="Search name, mobile, email..."
-            className="pl-9"
+            className="pl-9 h-9 rounded-[10px] shadow-sm border-[0.5px] border-border/50"
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
@@ -109,10 +109,10 @@ export default function CustomersPage() {
             setPage(1);
           }}
         >
-          <SelectTrigger className="w-[150px]">
+          <SelectTrigger className="w-[150px] h-9 rounded-[10px] shadow-sm border-[0.5px] border-border/50">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="rounded-[10px]">
             <SelectItem value="ALL">All Statuses</SelectItem>
             <SelectItem value="LEAD">Lead</SelectItem>
             <SelectItem value="ACTIVE">Active</SelectItem>
@@ -127,10 +127,10 @@ export default function CustomersPage() {
             setPage(1);
           }}
         >
-          <SelectTrigger className="w-[150px]">
+          <SelectTrigger className="w-[150px] h-9 rounded-[10px] shadow-sm border-[0.5px] border-border/50">
             <SelectValue placeholder="Type" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="rounded-[10px]">
             <SelectItem value="ALL">All Types</SelectItem>
             <SelectItem value="RETAIL">Retail</SelectItem>
             <SelectItem value="WHOLESALE">Wholesale</SelectItem>
@@ -139,23 +139,23 @@ export default function CustomersPage() {
         </Select>
       </div>
 
-      <div className="bg-surface rounded-md border border-line overflow-hidden">
+      <div className="bg-card shadow-sm border-[0.5px] border-border/50 rounded-2xl overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-canvas">
-              <TableHead>Name</TableHead>
-              <TableHead>Business / Mobile</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Follow-up</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+            <TableRow className="bg-canvas/50 border-b-[0.5px] border-border/50">
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider pl-5">Name</TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Business / Mobile</TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Type</TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Status</TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Follow-up</TableHead>
+              <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider pr-5">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
-                <TableRow key={i}>
-                  <TableCell>
+                <TableRow key={i} className="border-b-[0.5px] border-border/50">
+                  <TableCell className="pl-5">
                     <Skeleton className="h-5 w-32" />
                   </TableCell>
                   <TableCell>
@@ -170,26 +170,26 @@ export default function CustomersPage() {
                   <TableCell>
                     <Skeleton className="h-5 w-24" />
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right pr-5">
                     <Skeleton className="h-5 w-12 ml-auto" />
                   </TableCell>
                 </TableRow>
               ))
             ) : isError ? (
-              <TableRow>
+              <TableRow className="border-b-[0.5px] border-border/50">
                 <TableCell
                   colSpan={6}
-                  className="text-center py-10 text-destructive"
+                  className="text-center py-10 text-destructive text-[13px] leading-tight"
                 >
                   Failed to load customers.{" "}
-                  <Button variant="link" onClick={() => refetch()}>
+                  <Button variant="link" onClick={() => refetch()} className="text-[13px] h-auto p-0">
                     Try again
                   </Button>
                 </TableCell>
               </TableRow>
             ) : data?.data.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center py-10 text-muted">
+              <TableRow className="border-b-[0.5px] border-border/50">
+                <TableCell colSpan={6} className="text-center py-10 text-muted text-[13px] leading-tight">
                   No customers found.
                 </TableCell>
               </TableRow>
@@ -197,23 +197,23 @@ export default function CustomersPage() {
               data?.data.map((customer) => (
                 <TableRow
                   key={customer.id}
-                  className="hover:bg-canvas/50 transition-colors"
+                  className="hover:bg-canvas/50 transition-colors border-b-[0.5px] border-border/50"
                 >
-                  <TableCell className="font-medium">
+                  <TableCell className="font-medium pl-5">
                     <Link
                       href={`/customers/${customer.id}`}
-                      className="text-accent hover:underline"
+                      className="text-accent hover:underline text-[13px] leading-tight"
                     >
                       {customer.name}
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <div className="text-sm">
+                    <div className="text-[13px] leading-tight">
                       {customer.businessName || "-"}
                     </div>
-                    <div className="text-xs text-muted">{customer.mobile}</div>
+                    <div className="text-xs text-muted leading-tight">{customer.mobile}</div>
                   </TableCell>
-                  <TableCell className="text-sm">{customer.type}</TableCell>
+                  <TableCell className="text-[13px] leading-tight">{customer.type}</TableCell>
                   <TableCell>
                     <Badge
                       variant={
@@ -223,21 +223,23 @@ export default function CustomersPage() {
                             ? "secondary"
                             : "outline"
                       }
+                      className="rounded-[6px]"
                     >
                       {customer.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-sm">
+                  <TableCell className="text-[13px] leading-tight">
                     {customer.followUpDate
                       ? format(new Date(customer.followUpDate), "dd MMM yyyy")
                       : "-"}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right pr-5">
                     <Link
                       href={`/customers/${customer.id}`}
                       className={buttonVariants({
                         variant: "ghost",
                         size: "sm",
+                        className: "rounded-[8px] h-8 text-[12px]",
                       })}
                     >
                       View
@@ -250,7 +252,7 @@ export default function CustomersPage() {
         </Table>
 
         {data?.meta && (
-          <div className="flex items-center justify-between p-4 border-t border-line">
+          <div className="flex items-center justify-between p-4 border-t-[0.5px] border-border/50 rounded-b-2xl">
             <div className="text-sm text-muted">
               Showing {(page - 1) * limit + 1} to{" "}
               {Math.min(page * limit, data.meta.total)} of {data.meta.total}{" "}
@@ -262,6 +264,7 @@ export default function CustomersPage() {
                 size="sm"
                 disabled={page === 1}
                 onClick={handlePrevPage}
+                className="rounded-[10px] shadow-sm border-[0.5px] border-border/50"
               >
                 Previous
               </Button>
@@ -270,6 +273,7 @@ export default function CustomersPage() {
                 size="sm"
                 disabled={page >= data.meta.totalPages}
                 onClick={handleNextPage}
+                className="rounded-[10px] shadow-sm border-[0.5px] border-border/50"
               >
                 Next
               </Button>

@@ -118,28 +118,29 @@ export default function ProductListPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="pb-8 tracking-[0.01em] space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-ink">
             Products & Inventory
           </h1>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-[13px] leading-tight">
             Manage your product catalog and stock levels.
           </p>
         </div>
         {canCreate && (
-          <Button onClick={openCreateModal}>
-            <Plus className="mr-2 h-4 w-4" /> Add Product
+          <Button onClick={openCreateModal} className="rounded-[10px] h-9 shadow-sm">
+            <Plus className="mr-2 h-4 w-4" strokeWidth={1} /> Add product
           </Button>
         )}
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-card p-4 rounded-xl border shadow-sm">
+      <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-card p-4 shadow-sm border-[0.5px] border-border/50 rounded-2xl">
         <div className="w-full sm:w-1/3">
           <Input
             placeholder="Search products by Name or SKU..."
             value={searchTerm}
+            className="h-9 rounded-[10px] shadow-sm border-[0.5px] border-border/50 pl-9"
             onChange={(e) => {
               setSearchTerm(e.target.value);
               setPage(1);
@@ -158,113 +159,100 @@ export default function ProductListPage() {
           />
           <Label
             htmlFor="low-stock"
-            className="flex items-center cursor-pointer"
+            className="flex items-center cursor-pointer text-[13px] leading-tight"
           >
-            <AlertCircle className="w-4 h-4 mr-2 text-destructive" />
-            Low Stock Only
+            <AlertCircle className="w-4 h-4 mr-2 text-destructive" strokeWidth={1} />
+            Low stock only
           </Label>
         </div>
       </div>
 
-      <div className="bg-card rounded-xl border shadow-sm overflow-hidden">
+      <div className="bg-card shadow-sm border-[0.5px] border-border/50 rounded-2xl overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-muted/50 hover:bg-muted/50">
-              <TableHead className="w-[100px]">SKU</TableHead>
-              <TableHead>Product Info</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Stock</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+            <TableRow className="bg-canvas/50 border-b-[0.5px] border-border/50 hover:bg-canvas/50">
+              <TableHead className="w-[100px] text-[12px] font-medium text-muted-foreground tracking-wider pl-5">SKU</TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Product Info</TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Price</TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Stock</TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Location</TableHead>
+              <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider pr-5">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
-                <TableRow key={i}>
-                  <TableCell>
-                    <Skeleton className="h-4 w-16" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-4 w-32 mb-1" />
-                    <Skeleton className="h-3 w-20" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-4 w-16" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-4 w-12" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-4 w-16" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-8 w-8 ml-auto" />
-                  </TableCell>
+                <TableRow key={i} className="border-b-[0.5px] border-border/50">
+                  <TableCell className="pl-5"><Skeleton className="h-4 w-16" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-32 mb-1" /><Skeleton className="h-3 w-20" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-12" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                  <TableCell className="pr-5"><Skeleton className="h-8 w-8 ml-auto" /></TableCell>
                 </TableRow>
               ))
             ) : data?.data.length === 0 ? (
-              <TableRow>
+              <TableRow className="border-b-[0.5px] border-border/50">
                 <TableCell
                   colSpan={6}
-                  className="text-center py-10 text-muted-foreground"
+                  className="text-center py-10 text-muted-foreground text-[13px] leading-tight"
                 >
                   No products found.
                 </TableCell>
               </TableRow>
             ) : (
               data?.data.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell className="font-mono text-xs">
+                <TableRow key={product.id} className="hover:bg-canvas/50 transition-colors border-b-[0.5px] border-border/50">
+                  <TableCell className="font-mono text-[13px] leading-tight pl-5">
                     {product.sku}
                   </TableCell>
                   <TableCell>
-                    <div className="font-medium text-ink">{product.name}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">
+                    <div className="font-medium text-ink text-[13px] leading-tight">{product.name}</div>
+                    <div className="text-xs text-muted-foreground leading-tight mt-0.5">
                       {product.category}
                     </div>
                   </TableCell>
-                  <TableCell className="font-medium">
+                  <TableCell className="font-medium text-[13px] leading-tight">
                     ₹{parseFloat(product.unitPrice).toFixed(2)}
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-2">
                       <span
-                        className={`font-semibold ${product.currentStock <= product.minStockAlert ? "text-destructive" : "text-ink"}`}
+                        className={`font-semibold text-[13px] leading-tight ${product.currentStock <= product.minStockAlert ? "text-destructive" : "text-ink"}`}
                       >
                         {product.currentStock}
                       </span>
                       {product.currentStock <= product.minStockAlert && (
                         <Badge
                           variant="outline"
-                          className="text-[10px] text-destructive border-destructive px-1 py-0 h-4"
+                          className="text-[10px] text-destructive border-[0.5px] border-destructive px-1 py-0 h-4 rounded-[6px]"
                         >
                           Low
                         </Badge>
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="text-muted-foreground text-sm">
+                  <TableCell className="text-muted-foreground text-[13px] leading-tight">
                     {product.location || "-"}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right pr-5">
                     <DropdownMenu>
                       <DropdownMenuTrigger
                         render={
-                          <Button variant="ghost" className="h-8 w-8 p-0" />
+                          <Button variant="ghost" className="h-8 w-8 p-0 rounded-[8px]" />
                         }
                       >
                         <span className="sr-only">Open menu</span>
-                        <MoreHorizontal className="h-4 w-4" />
+                        <MoreHorizontal className="h-4 w-4" strokeWidth={1} />
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
+                      <DropdownMenuContent align="end" className="rounded-[10px] shadow-sm border-[0.5px] border-border/50">
                         <DropdownMenuGroup>
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuLabel className="text-[12px] text-muted-foreground">Actions</DropdownMenuLabel>
                           <DropdownMenuItem
                             render={
                               <Link
                                 href={`/products/${product.id}`}
-                                className="cursor-pointer"
+                                className="cursor-pointer text-[13px]"
                               />
                             }
                           >
@@ -272,30 +260,29 @@ export default function ProductListPage() {
                           </DropdownMenuItem>
                           {canCreate && (
                             <>
-                              <DropdownMenuSeparator />
+                              <DropdownMenuSeparator className="border-border/50 border-b-[0.5px]" />
                               <DropdownMenuItem
                                 onClick={() => handleEdit(product)}
-                                className="cursor-pointer"
+                                className="cursor-pointer text-[13px]"
                               >
-                                Edit Product
+                                Edit product
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => handleAdjustStock(product)}
-                                className="cursor-pointer"
+                                className="cursor-pointer text-[13px]"
                               >
-                                <ArrowUpDown className="mr-2 h-4 w-4" /> Adjust
-                                Stock
+                                <ArrowUpDown className="mr-2 h-4 w-4" strokeWidth={1} /> Adjust stock
                               </DropdownMenuItem>
                             </>
                           )}
                           {canDelete && (
                             <>
-                              <DropdownMenuSeparator />
+                              <DropdownMenuSeparator className="border-border/50 border-b-[0.5px]" />
                               <DropdownMenuItem
                                 onClick={() => handleDelete(product.id)}
-                                className="text-destructive focus:text-destructive cursor-pointer"
+                                className="text-destructive focus:text-destructive cursor-pointer text-[13px]"
                               >
-                                Delete Product
+                                Delete product
                               </DropdownMenuItem>
                             </>
                           )}
@@ -320,12 +307,13 @@ export default function ProductListPage() {
                 size="sm"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
+                className="rounded-[10px] shadow-sm border-[0.5px] border-border/50"
               >
                 Previous
               </Button>
             </PaginationItem>
             <PaginationItem>
-              <span className="text-sm text-muted-foreground mx-4">
+              <span className="text-[13px] leading-tight text-muted-foreground mx-4">
                 Page {page} of {data.meta.totalPages}
               </span>
             </PaginationItem>
@@ -337,6 +325,7 @@ export default function ProductListPage() {
                   setPage((p) => Math.min(data.meta.totalPages, p + 1))
                 }
                 disabled={page === data.meta.totalPages}
+                className="rounded-[10px] shadow-sm border-[0.5px] border-border/50"
               >
                 Next
               </Button>

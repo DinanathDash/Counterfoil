@@ -16,6 +16,16 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Table,
   TableBody,
   TableCell,
@@ -47,6 +57,7 @@ export default function ProductDetailPage() {
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isAdjustOpen, setIsAdjustOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const { data, isLoading, isError } = useQuery({
@@ -78,15 +89,14 @@ export default function ProductDetailPage() {
     },
   });
 
+  const confirmDelete = () => {
+    setIsDeleting(true);
+    deleteMutation.mutate();
+    setIsDeleteDialogOpen(false);
+  };
+
   const handleDelete = () => {
-    if (
-      confirm(
-        "Are you sure you want to delete this product? This action cannot be undone unless it is a soft delete.",
-      )
-    ) {
-      setIsDeleting(true);
-      deleteMutation.mutate();
-    }
+    setIsDeleteDialogOpen(true);
   };
 
   if (isLoading) {
@@ -135,7 +145,7 @@ export default function ProductDetailPage() {
               className: "rounded-[10px]",
             })}
           >
-            <ArrowLeft className="h-5 w-5" strokeWidth={1} />
+            <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
             <h1 className="text-2xl font-bold text-ink flex items-center gap-3">
@@ -160,14 +170,13 @@ export default function ProductDetailPage() {
                 onClick={() => setIsFormOpen(true)}
                 className="rounded-[10px] h-9 shadow-sm border-[0.5px] border-border/50"
               >
-                <Edit className="h-4 w-4 mr-2" strokeWidth={1} /> Edit
+                <Edit className="h-4 w-4 mr-2" /> Edit
               </Button>
               <Button
                 onClick={() => setIsAdjustOpen(true)}
                 className="rounded-[10px] h-9 shadow-sm"
               >
-                <ArrowUpDown className="h-4 w-4 mr-2" strokeWidth={1} /> Adjust
-                stock
+                <ArrowUpDown className="h-4 w-4 mr-2" /> Adjust stock
               </Button>
             </>
           )}
@@ -178,7 +187,7 @@ export default function ProductDetailPage() {
               disabled={isDeleting}
               className="rounded-[10px] h-9 shadow-sm"
             >
-              <Trash2 className="h-4 w-4 mr-2" strokeWidth={1} /> Delete
+              <Trash2 className="h-4 w-4 mr-2" /> Delete
             </Button>
           )}
         </div>
@@ -196,8 +205,7 @@ export default function ProductDetailPage() {
             <CardContent className="space-y-4 pt-4">
               <div className="flex justify-between items-center py-2 border-b-[0.5px] border-border/50">
                 <span className="text-muted-foreground text-[13px] leading-tight flex items-center">
-                  <Package className="w-4 h-4 mr-2" strokeWidth={1} /> Stock
-                  Status
+                  <Package className="w-4 h-4 mr-2" /> Stock Status
                 </span>
                 <span
                   className={`font-bold text-lg ${isLowStock ? "text-destructive" : "text-primary"}`}
@@ -217,7 +225,7 @@ export default function ProductDetailPage() {
 
               <div className="flex justify-between items-center py-2 border-b-[0.5px] border-border/50">
                 <span className="text-muted-foreground text-[13px] leading-tight flex items-center">
-                  <Tag className="w-4 h-4 mr-2" strokeWidth={1} /> Category
+                  <Tag className="w-4 h-4 mr-2" /> Category
                 </span>
                 <Badge variant="secondary" className="rounded-[6px]">
                   {product.category}
@@ -235,7 +243,7 @@ export default function ProductDetailPage() {
 
               <div className="flex justify-between items-center py-2 border-b-[0.5px] border-border/50">
                 <span className="text-muted-foreground text-[13px] leading-tight flex items-center">
-                  <MapPin className="w-4 h-4 mr-2" strokeWidth={1} /> Location
+                  <MapPin className="w-4 h-4 mr-2" /> Location
                 </span>
                 <span className="font-medium text-[13px] leading-tight">
                   {product.location || "Unassigned"}
@@ -307,22 +315,14 @@ export default function ProductDetailPage() {
                               variant="outline"
                               className="text-emerald-600 border-emerald-600/50 bg-emerald-50 rounded-[6px]"
                             >
-                              <ArrowDownRight
-                                className="w-3 h-3 mr-1"
-                                strokeWidth={1}
-                              />{" "}
-                              IN
+                              <ArrowDownRight className="w-3 h-3 mr-1" /> IN
                             </Badge>
                           ) : (
                             <Badge
                               variant="outline"
                               className="text-orange-600 border-orange-600/50 bg-orange-50 rounded-[6px]"
                             >
-                              <ArrowUpRight
-                                className="w-3 h-3 mr-1"
-                                strokeWidth={1}
-                              />{" "}
-                              OUT
+                              <ArrowUpRight className="w-3 h-3 mr-1" /> OUT
                             </Badge>
                           )}
                         </TableCell>
@@ -369,6 +369,32 @@ export default function ProductDetailPage() {
         onClose={() => setIsAdjustOpen(false)}
         product={product}
       />
+
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      >
+        <AlertDialogContent className="rounded-[12px]">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete this
+              product from your inventory.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-[10px]">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="rounded-[10px] bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete Product
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

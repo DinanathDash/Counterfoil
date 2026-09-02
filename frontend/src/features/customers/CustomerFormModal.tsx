@@ -316,7 +316,7 @@ export function CustomerFormModal({
             <Button
               type="submit"
               disabled={mutation.isPending}
-              className="bg-accent hover:bg-accent/90 text-white"
+              className="bg-primary hover:bg-primary/90 text-white"
             >
               {mutation.isPending ? "Saving..." : "Save Customer"}
             </Button>

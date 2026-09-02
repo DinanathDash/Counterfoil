@@ -17,7 +17,7 @@ export default function NewChallanPage() {
             className: "rounded-[10px]",
           })}
         >
-          <ArrowLeft className="h-5 w-5" strokeWidth={1} />
+          <ArrowLeft className="h-5 w-5" />
         </Link>
         <div>
           <h1 className="text-2xl font-bold text-ink">New Challan</h1>

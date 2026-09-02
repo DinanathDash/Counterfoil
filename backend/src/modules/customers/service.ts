@@ -54,14 +54,15 @@ export const getFollowUps = async () => {
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
 
-  const endOfDay = new Date();
-  endOfDay.setHours(23, 59, 59, 999);
+  const endOfWeek = new Date();
+  endOfWeek.setDate(endOfWeek.getDate() + 7);
+  endOfWeek.setHours(23, 59, 59, 999);
 
   const data = await prisma.customer.findMany({
     where: {
       deletedAt: null,
       followUpDate: {
-        lte: endOfDay,
+        lte: endOfWeek,
       },
       status: {
         not: CustomerStatus.INACTIVE,
@@ -87,7 +88,14 @@ export const getCustomerById = async (id: string) => {
       },
       challans: {
         orderBy: { createdAt: 'desc' },
-        select: { id: true, status: true, createdAt: true, createdBy: { select: { name: true } } },
+        select: {
+          id: true,
+          challanNumber: true,
+          totalAmount: true,
+          status: true,
+          createdAt: true,
+          createdBy: { select: { name: true } },
+        },
       },
     },
   });

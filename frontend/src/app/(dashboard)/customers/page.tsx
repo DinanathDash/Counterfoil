@@ -81,19 +81,16 @@ export default function CustomersPage() {
         {canCreate && (
           <Button
             onClick={() => setIsModalOpen(true)}
-            className="bg-accent hover:bg-accent/90 text-white rounded-[10px] h-9 shadow-sm"
+            className="bg-primary hover:bg-primary/90 text-white rounded-[10px] h-9 shadow-sm"
           >
-            <Plus className="h-4 w-4 mr-2" strokeWidth={1} /> Add customer
+            <Plus className="h-4 w-4 mr-2" /> Add customer
           </Button>
         )}
       </div>
 
       <div className="flex space-x-4">
         <div className="relative flex-1 max-w-sm">
-          <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
-            strokeWidth={1}
-          />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search name, mobile, email..."
             className="pl-9 h-9 rounded-[10px] shadow-sm border-[0.5px] border-border/50"
@@ -210,7 +207,7 @@ export default function CustomersPage() {
               <TableRow className="border-b-[0.5px] border-border/50">
                 <TableCell
                   colSpan={6}
-                  className="text-center py-10 text-muted text-[13px] leading-tight"
+                  className="text-center py-10 text-muted-foreground text-[13px] leading-tight"
                 >
                   No customers found.
                 </TableCell>
@@ -224,16 +221,18 @@ export default function CustomersPage() {
                   <TableCell className="font-medium pl-5">
                     <Link
                       href={`/customers/${customer.id}`}
-                      className="text-accent hover:underline text-[13px] leading-tight"
+                      className="text-primary hover:underline text-[13px] leading-tight"
                     >
                       {customer.name}
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <div className="text-[13px] leading-tight">
-                      {customer.businessName || "-"}
-                    </div>
-                    <div className="text-xs text-muted leading-tight">
+                    {customer.businessName && (
+                      <div className="text-[13px] leading-tight">
+                        {customer.businessName}
+                      </div>
+                    )}
+                    <div className="text-xs text-muted-foreground leading-tight">
                       {customer.mobile}
                     </div>
                   </TableCell>
@@ -279,7 +278,7 @@ export default function CustomersPage() {
 
         {data?.meta && (
           <div className="flex items-center justify-between p-4 border-t-[0.5px] border-border/50 rounded-b-2xl">
-            <div className="text-sm text-muted">
+            <div className="text-sm text-muted-foreground">
               Showing {(page - 1) * limit + 1} to{" "}
               {Math.min(page * limit, data.meta.total)} of {data.meta.total}{" "}
               results

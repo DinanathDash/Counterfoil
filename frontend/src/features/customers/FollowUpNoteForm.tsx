@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -9,7 +9,7 @@ import { toast } from "@/components/ui/toast";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -17,6 +17,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const noteSchema = z.object({
   note: z.string().min(1, "Note text is required").max(1000),
@@ -43,6 +52,7 @@ export function FollowUpNoteForm({
     reset,
     setValue,
     watch,
+    control,
     formState: { errors },
   } = useForm<NoteFormValues>({
     resolver: zodResolver(noteSchema),
@@ -100,11 +110,11 @@ export function FollowUpNoteForm({
   };
 
   return (
-    <div className="bg-surface p-4 rounded-md border border-line shadow-sm">
+    <div className="bg-surface p-4 rounded-2xl border border-line shadow-sm">
       <h3 className="font-semibold text-ink mb-3">Add Follow-up Note</h3>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-2">
-          <textarea
+          <Textarea
             {...register("note")}
             placeholder="Type your note here..."
             className="w-full min-h-[100px] p-3 text-sm rounded-md border border-input bg-transparent shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
@@ -114,17 +124,47 @@ export function FollowUpNoteForm({
           )}
         </div>
 
-        <div className="flex gap-4 items-end">
-          <div className="space-y-2 flex-1">
-            <Label htmlFor="followUpDate">Next Follow-up Date (Optional)</Label>
-            <Input
-              id="followUpDate"
-              type="date"
-              {...register("followUpDate")}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label>Next Follow-up Date (Optional)</Label>
+            <Controller
+              control={control}
+              name="followUpDate"
+              render={({ field }) => (
+                <Popover>
+                  <PopoverTrigger
+                    render={
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full justify-start text-left font-normal h-9 px-3",
+                          !field.value && "text-muted-foreground",
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
+                        {field.value ? (
+                          format(new Date(field.value), "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                      </Button>
+                    }
+                  />
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value ? new Date(field.value) : undefined}
+                      onSelect={(date) =>
+                        field.onChange(date ? format(date, "yyyy-MM-dd") : "")
+                      }
+                    />
+                  </PopoverContent>
+                </Popover>
+              )}
             />
           </div>
 
-          <div className="space-y-2 flex-1">
+          <div className="space-y-2">
             <Label>Update Status (Optional)</Label>
             <Select
               value={statusValue}
@@ -132,7 +172,7 @@ export function FollowUpNoteForm({
                 setValue("status", val as "LEAD" | "ACTIVE" | "INACTIVE")
               }
             >
-              <SelectTrigger>
+              <SelectTrigger className="h-9">
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
               <SelectContent>
@@ -142,11 +182,13 @@ export function FollowUpNoteForm({
               </SelectContent>
             </Select>
           </div>
+        </div>
 
+        <div className="flex justify-end pt-2">
           <Button
             type="submit"
             disabled={mutation.isPending}
-            className="bg-accent hover:bg-accent/90"
+            className="bg-primary hover:bg-primary/90"
           >
             {mutation.isPending ? "Saving..." : "Save Note"}
           </Button>

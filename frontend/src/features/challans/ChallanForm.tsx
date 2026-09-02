@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -24,6 +24,13 @@ import {
   CardDescription,
   CardFooter,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Popover,
   PopoverContent,
@@ -327,30 +334,49 @@ export function ChallanForm({ initialData, isEdit }: ChallanFormProps) {
                   return (
                     <TableRow key={field.id}>
                       <TableCell>
-                        <select
-                          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                          {...register(`items.${index}.productId`, {
-                            onChange: (e) => {
-                              const pId = e.target.value;
-                              const p = products.find(
-                                (prod) => prod.id === pId,
-                              );
-                              if (p) {
-                                setValue(
-                                  `items.${index}.unitPrice`,
-                                  parseFloat(p.unitPrice),
+                        <Controller
+                          name={`items.${index}.productId`}
+                          control={control}
+                          render={({ field }) => (
+                            <Select
+                              onValueChange={(value) => {
+                                field.onChange(value);
+                                const p = products.find(
+                                  (prod) => prod.id === value,
                                 );
-                              }
-                            },
-                          })}
-                        >
-                          <option value="">Select a product...</option>
-                          {products.map((p) => (
-                            <option key={p.id} value={p.id}>
-                              {p.name} ({p.sku})
-                            </option>
-                          ))}
-                        </select>
+                                if (p) {
+                                  setValue(
+                                    `items.${index}.unitPrice`,
+                                    parseFloat(p.unitPrice),
+                                  );
+                                }
+                              }}
+                              value={field.value}
+                            >
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select a product...">
+                                  {field.value && products.length > 0
+                                    ? (() => {
+                                        const p = products.find(
+                                          (prod) => prod.id === field.value,
+                                        );
+                                        return p
+                                          ? `${p.name} (${p.sku})`
+                                          : "Select a product...";
+                                      })()
+                                    : "Select a product..."}
+                                </SelectValue>
+                              </SelectTrigger>
+                              <SelectContent>
+                                {products.map((p) => (
+                                  <SelectItem key={p.id} value={p.id}>
+                                    {p.name} ({p.sku})
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
                         {errors.items?.[index]?.productId && (
                           <p className="text-xs text-destructive mt-1">
                             {errors.items[index]?.productId?.message}

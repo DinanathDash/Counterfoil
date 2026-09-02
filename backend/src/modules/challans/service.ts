@@ -52,6 +52,7 @@ export const getChallans = async (params: {
       orderBy: { createdAt: 'desc' },
       include: {
         createdBy: { select: { id: true, name: true } },
+        _count: { select: { items: true } },
       },
     }),
     prisma.challan.count({ where }),
@@ -129,7 +130,8 @@ export const createChallan = async (
 
       const challanItemsData = itemsPayload.map((item) => {
         const product = productMap.get(item.productId)!;
-        const finalUnitPrice = item.unitPrice !== undefined ? new Prisma.Decimal(item.unitPrice) : product.unitPrice;
+        const finalUnitPrice =
+          item.unitPrice !== undefined ? new Prisma.Decimal(item.unitPrice) : product.unitPrice;
         const lineTotal = finalUnitPrice.mul(item.quantity);
 
         totalAmount = totalAmount.add(lineTotal);
@@ -216,7 +218,8 @@ export const updateChallan = async (
 
       const challanItemsData = itemsPayload.map((item) => {
         const product = productMap.get(item.productId)!;
-        const finalUnitPrice = item.unitPrice !== undefined ? new Prisma.Decimal(item.unitPrice) : product.unitPrice;
+        const finalUnitPrice =
+          item.unitPrice !== undefined ? new Prisma.Decimal(item.unitPrice) : product.unitPrice;
         const lineTotal = finalUnitPrice.mul(item.quantity);
         totalAmount = totalAmount.add(lineTotal);
         totalQuantity += item.quantity;

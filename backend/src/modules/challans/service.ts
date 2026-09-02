@@ -86,7 +86,7 @@ export const getChallanById = async (id: string) => {
 
 export const createChallan = async (
   customerId: string,
-  itemsPayload: { productId: string; quantity: number }[],
+  itemsPayload: { productId: string; quantity: number; unitPrice?: number }[],
   userId: string,
   notes?: string,
   requestedStatus: ChallanStatus = ChallanStatus.DRAFT,
@@ -129,7 +129,8 @@ export const createChallan = async (
 
       const challanItemsData = itemsPayload.map((item) => {
         const product = productMap.get(item.productId)!;
-        const lineTotal = product.unitPrice.mul(item.quantity);
+        const finalUnitPrice = item.unitPrice !== undefined ? new Prisma.Decimal(item.unitPrice) : product.unitPrice;
+        const lineTotal = finalUnitPrice.mul(item.quantity);
 
         totalAmount = totalAmount.add(lineTotal);
         totalQuantity += item.quantity;
@@ -139,7 +140,7 @@ export const createChallan = async (
           productName: product.name,
           sku: product.sku,
           category: product.category,
-          unitPrice: product.unitPrice,
+          unitPrice: finalUnitPrice,
           quantity: item.quantity,
           lineTotal,
         };
@@ -180,7 +181,7 @@ export const createChallan = async (
 
 export const updateChallan = async (
   id: string,
-  itemsPayload?: { productId: string; quantity: number }[],
+  itemsPayload?: { productId: string; quantity: number; unitPrice?: number }[],
   notes?: string,
 ) => {
   return prisma.$transaction(async (tx) => {
@@ -215,7 +216,8 @@ export const updateChallan = async (
 
       const challanItemsData = itemsPayload.map((item) => {
         const product = productMap.get(item.productId)!;
-        const lineTotal = product.unitPrice.mul(item.quantity);
+        const finalUnitPrice = item.unitPrice !== undefined ? new Prisma.Decimal(item.unitPrice) : product.unitPrice;
+        const lineTotal = finalUnitPrice.mul(item.quantity);
         totalAmount = totalAmount.add(lineTotal);
         totalQuantity += item.quantity;
 
@@ -224,7 +226,7 @@ export const updateChallan = async (
           productName: product.name,
           sku: product.sku,
           category: product.category,
-          unitPrice: product.unitPrice,
+          unitPrice: finalUnitPrice,
           quantity: item.quantity,
           lineTotal,
         };

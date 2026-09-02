@@ -4,6 +4,7 @@ import { ChallanStatus } from '@prisma/client';
 const challanItemSchema = z.object({
   productId: z.string().uuid(),
   quantity: z.number().int().positive('Quantity must be greater than 0'),
+  unitPrice: z.number().min(0, 'Unit price cannot be negative').optional(),
 });
 
 export const createChallanSchema = z.object({

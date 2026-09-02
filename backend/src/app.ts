@@ -17,6 +17,16 @@ app.use(express.json({ limit: '1mb' }));
 app.use(
   pinoHttp({
     level: env.LOG_LEVEL,
+    customSuccessMessage: (req, res) => {
+      return `${req.method} ${req.url} [${res.statusCode}]`;
+    },
+    customErrorMessage: (req, res, err) => {
+      return `${req.method} ${req.url} [${res.statusCode}] - ${err.message}`;
+    },
+    transport:
+      process.env.NODE_ENV !== 'production'
+        ? { target: 'pino-pretty', options: { colorize: true, ignore: 'req,res,responseTime' } }
+        : undefined,
   }),
 );
 

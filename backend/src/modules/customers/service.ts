@@ -1,6 +1,7 @@
 import { Prisma, CustomerStatus, CustomerType } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 import { AppError } from '../../utils/AppError';
+import { parseCustomerSort } from './schema';
 
 export const getCustomers = async (params: {
   page?: number;
@@ -8,6 +9,8 @@ export const getCustomers = async (params: {
   q?: string;
   status?: CustomerStatus;
   type?: CustomerType;
+  /** Raw query string, e.g. "name:asc,businessName:desc". */
+  sort?: string;
 }) => {
   const page = Number(params.page) || 1;
   const limit = Number(params.limit) || 50;
@@ -26,12 +29,29 @@ export const getCustomers = async (params: {
   if (params.status) where.status = params.status;
   if (params.type) where.type = params.type;
 
+  // Sorting is server-side because the list is paginated — ordering only the
+  // current page would sort 10 of N rows and read as broken. Prisma applies an
+  // orderBy array in sequence, so the caller's column order is the tie-break
+  // precedence.
+  const orderBy: Prisma.CustomerOrderByWithRelationInput[] = parseCustomerSort(
+    params.sort,
+  ).map(
+    (entry) =>
+      entry.field === 'businessName'
+        ? // businessName is nullable; keep the blanks at the bottom either way
+          // rather than letting them lead the list when sorting descending.
+          { businessName: { sort: entry.order, nulls: 'last' } }
+        : { name: entry.order },
+  );
+
+  if (orderBy.length === 0) orderBy.push({ createdAt: 'desc' });
+
   const [data, total] = await Promise.all([
     prisma.customer.findMany({
       where,
       skip,
       take: limit,
-      orderBy: { createdAt: 'desc' },
+      orderBy,
       include: {
         createdBy: { select: { id: true, name: true } },
       },

@@ -29,7 +29,71 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Search, Plus } from "lucide-react";
+import {
+  Search,
+  Plus,
+  ArrowUpDown,
+  ArrowDownAZ,
+  ArrowUpAZ,
+} from "lucide-react";
+
+// Must match the sortable fields the customers API accepts.
+type SortField = "name" | "businessName";
+type SortOrder = "asc" | "desc";
+type Sort = { field: SortField; order: SortOrder };
+
+function SortableHead({
+  field,
+  label,
+  className,
+  sorts,
+  onToggle,
+}: {
+  field: SortField;
+  label: string;
+  className?: string;
+  sorts: Sort[];
+  onToggle: (field: SortField) => void;
+}) {
+  const index = sorts.findIndex((s) => s.field === field);
+  const active = index === -1 ? null : sorts[index];
+
+  // ArrowDownAZ reads "A at the top, Z at the bottom" — that's ascending.
+  // ArrowUpAZ is the reverse. Inactive columns get the neutral two-way arrow.
+  const Icon = !active
+    ? ArrowUpDown
+    : active.order === "asc"
+      ? ArrowDownAZ
+      : ArrowUpAZ;
+
+  return (
+    <TableHead
+      className={className}
+      aria-sort={
+        !active ? "none" : active.order === "asc" ? "ascending" : "descending"
+      }
+    >
+      <button
+        type="button"
+        onClick={() => onToggle(field)}
+        className="group inline-flex items-center gap-1.5 -mx-1 px-1 py-0.5 rounded-[6px] transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+      >
+        {label}
+        <Icon
+          className={`h-3.5 w-3.5 transition-opacity ${
+            active ? "opacity-100 text-ink" : "opacity-40 group-hover:opacity-70"
+          }`}
+        />
+        {/* Precedence only matters once a second column joins the sort. */}
+        {active && sorts.length > 1 && (
+          <span className="text-[10px] font-semibold leading-none text-ink tabular-nums">
+            {index + 1}
+          </span>
+        )}
+      </button>
+    </TableHead>
+  );
+}
 
 export default function CustomersPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -37,6 +101,11 @@ export default function CustomersPage() {
   const [typeFilter, setTypeFilter] = useState("ALL");
   const [page, setPage] = useState(1);
   const limit = 10;
+
+  // Ordered, most significant first — the API applies them in sequence, so a
+  // second column acts as the tie-break for the first.
+  const [sorts, setSorts] = useState<Sort[]>([]);
+  const sortParam = sorts.map((s) => `${s.field}:${s.order}`).join(",");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const user = useAuthStore((state) => state.user);
@@ -52,6 +121,7 @@ export default function CustomersPage() {
         q: debouncedSearch,
         status: statusFilter,
         type: typeFilter,
+        sort: sortParam,
       },
     ],
     queryFn: () =>
@@ -61,8 +131,27 @@ export default function CustomersPage() {
         q: debouncedSearch || undefined,
         status: statusFilter === "ALL" ? undefined : statusFilter,
         type: typeFilter === "ALL" ? undefined : typeFilter,
+        sort: sortParam || undefined,
       }),
   });
+
+  // Each column cycles asc -> desc -> off independently, and columns stack in
+  // the order they were clicked, so both can be active at once. Sorting is
+  // applied by the API, not to the current page, so it orders all matching
+  // rows rather than just the ten on screen.
+  const toggleSort = (field: SortField) => {
+    setSorts((current) => {
+      const existing = current.find((s) => s.field === field);
+      if (!existing) return [...current, { field, order: "asc" }];
+      if (existing.order === "asc") {
+        return current.map((s) =>
+          s.field === field ? { ...s, order: "desc" as SortOrder } : s,
+        );
+      }
+      return current.filter((s) => s.field !== field);
+    });
+    setPage(1);
+  };
 
   const canCreate = user ? hasPermission(user.role, "CREATE_CUSTOMER") : false;
 
@@ -143,12 +232,20 @@ export default function CustomersPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-canvas/50 border-b-[0.5px] border-border/50">
-              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider pl-5">
-                Name
-              </TableHead>
-              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">
-                Business / Mobile
-              </TableHead>
+              <SortableHead
+                field="name"
+                label="Name"
+                className="text-[12px] font-medium text-muted-foreground tracking-wider pl-5"
+                sorts={sorts}
+                onToggle={toggleSort}
+              />
+              <SortableHead
+                field="businessName"
+                label="Business / Mobile"
+                className="text-[12px] font-medium text-muted-foreground tracking-wider"
+                sorts={sorts}
+                onToggle={toggleSort}
+              />
               <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">
                 Type
               </TableHead>

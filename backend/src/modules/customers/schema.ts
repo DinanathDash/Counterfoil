@@ -39,6 +39,42 @@ export const addNoteSchema = z.object({
   }),
 });
 
+export const CUSTOMER_SORT_FIELDS = ['name', 'businessName'] as const;
+export type CustomerSortField = (typeof CUSTOMER_SORT_FIELDS)[number];
+export type CustomerSort = { field: CustomerSortField; order: 'asc' | 'desc' };
+
+const SORT_TOKEN = /^(name|businessName):(asc|desc)$/;
+
+/**
+ * Turns the `sort` query string into an ordered list, most significant first.
+ *
+ * This lives here next to the validation rather than as a zod `.transform()`,
+ * because transforms on `query` never reach the route: Express 5's `req.query`
+ * is a getter that re-parses the querystring on every access, so the
+ * `Object.assign(req.query, ...)` write-back in the validate middleware
+ * mutates a throwaway object. The service therefore receives the raw string
+ * and parses it with this.
+ */
+export function parseCustomerSort(value?: string): CustomerSort[] {
+  if (!value) return [];
+
+  const seen = new Set<string>();
+  const parsed: CustomerSort[] = [];
+
+  for (const token of value.split(',')) {
+    const match = SORT_TOKEN.exec(token);
+    if (!match) continue; // already rejected by the schema; belt and braces
+    const [, field, order] = match;
+    // First mention of a field wins, so a repeated column can't quietly
+    // contradict itself or pad the ordering.
+    if (seen.has(field)) continue;
+    seen.add(field);
+    parsed.push({ field, order } as CustomerSort);
+  }
+
+  return parsed;
+}
+
 export const queryCustomerSchema = z.object({
   query: z.object({
     page: z.string().regex(/^\d+$/).optional().transform(Number),
@@ -46,5 +82,17 @@ export const queryCustomerSchema = z.object({
     q: z.string().optional(),
     status: z.nativeEnum(CustomerStatus).optional(),
     type: z.nativeEnum(CustomerType).optional(),
+    // Validation only — the parsing happens in parseCustomerSort above.
+    // An empty token (from a trailing comma, say) is malformed and 400s,
+    // rather than being quietly dropped.
+    sort: z
+      .string()
+      .optional()
+      .refine(
+        (value) => !value || value.split(',').every((t) => SORT_TOKEN.test(t)),
+        {
+          message: `Expected comma-separated <${CUSTOMER_SORT_FIELDS.join('|')}>:<asc|desc>`,
+        },
+      ),
   }),
 });

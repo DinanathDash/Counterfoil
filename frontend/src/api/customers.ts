@@ -7,8 +7,8 @@ export interface GetCustomersParams {
   q?: string;
   status?: string;
   type?: string;
-  sortBy?: string;
-  sortOrder?: "asc" | "desc";
+  /** Comma-separated, most significant first: "name:asc,businessName:desc" */
+  sort?: string;
 }
 
 export interface CustomerNote {

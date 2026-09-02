@@ -28,7 +28,11 @@ router.get(
   validate(queryProductSchema),
   productController.getProducts,
 );
-router.get('/low-stock', requireRole('ADMIN', 'WAREHOUSE', 'SALES', 'ACCOUNTS'), productController.getLowStock);
+router.get(
+  '/low-stock',
+  requireRole('ADMIN', 'WAREHOUSE', 'SALES', 'ACCOUNTS'),
+  productController.getLowStock,
+);
 router.get(
   '/:id',
   requireRole('ADMIN', 'WAREHOUSE', 'SALES', 'ACCOUNTS'),

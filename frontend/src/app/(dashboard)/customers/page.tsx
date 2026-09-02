@@ -90,7 +90,10 @@ export default function CustomersPage() {
 
       <div className="flex space-x-4">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted" strokeWidth={1} />
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+            strokeWidth={1}
+          />
           <Input
             placeholder="Search name, mobile, email..."
             className="pl-9 h-9 rounded-[10px] shadow-sm border-[0.5px] border-border/50"
@@ -143,12 +146,24 @@ export default function CustomersPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-canvas/50 border-b-[0.5px] border-border/50">
-              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider pl-5">Name</TableHead>
-              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Business / Mobile</TableHead>
-              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Type</TableHead>
-              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Status</TableHead>
-              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Follow-up</TableHead>
-              <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider pr-5">Actions</TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider pl-5">
+                Name
+              </TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">
+                Business / Mobile
+              </TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">
+                Type
+              </TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">
+                Status
+              </TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">
+                Follow-up
+              </TableHead>
+              <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider pr-5">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -182,14 +197,21 @@ export default function CustomersPage() {
                   className="text-center py-10 text-destructive text-[13px] leading-tight"
                 >
                   Failed to load customers.{" "}
-                  <Button variant="link" onClick={() => refetch()} className="text-[13px] h-auto p-0">
+                  <Button
+                    variant="link"
+                    onClick={() => refetch()}
+                    className="text-[13px] h-auto p-0"
+                  >
                     Try again
                   </Button>
                 </TableCell>
               </TableRow>
             ) : data?.data.length === 0 ? (
               <TableRow className="border-b-[0.5px] border-border/50">
-                <TableCell colSpan={6} className="text-center py-10 text-muted text-[13px] leading-tight">
+                <TableCell
+                  colSpan={6}
+                  className="text-center py-10 text-muted text-[13px] leading-tight"
+                >
                   No customers found.
                 </TableCell>
               </TableRow>
@@ -211,9 +233,13 @@ export default function CustomersPage() {
                     <div className="text-[13px] leading-tight">
                       {customer.businessName || "-"}
                     </div>
-                    <div className="text-xs text-muted leading-tight">{customer.mobile}</div>
+                    <div className="text-xs text-muted leading-tight">
+                      {customer.mobile}
+                    </div>
                   </TableCell>
-                  <TableCell className="text-[13px] leading-tight">{customer.type}</TableCell>
+                  <TableCell className="text-[13px] leading-tight">
+                    {customer.type}
+                  </TableCell>
                   <TableCell>
                     <Badge
                       variant={

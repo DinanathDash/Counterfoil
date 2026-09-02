@@ -86,9 +86,17 @@ export default function ChallanListPage() {
           </Badge>
         );
       case "CANCELLED":
-        return <Badge variant="destructive" className="rounded-[6px]">Cancelled</Badge>;
+        return (
+          <Badge variant="destructive" className="rounded-[6px]">
+            Cancelled
+          </Badge>
+        );
       default:
-        return <Badge variant="outline" className="rounded-[6px]">{status}</Badge>;
+        return (
+          <Badge variant="outline" className="rounded-[6px]">
+            {status}
+          </Badge>
+        );
     }
   };
 
@@ -114,7 +122,10 @@ export default function ChallanListPage() {
 
       <div className="flex flex-col sm:flex-row gap-4 items-center bg-card p-4 shadow-sm border-[0.5px] border-border/50 rounded-2xl">
         <div className="relative w-full sm:w-80">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" strokeWidth={1} />
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+            strokeWidth={1}
+          />
           <Input
             placeholder="Search by Challan # or Customer..."
             value={searchTerm}
@@ -151,26 +162,54 @@ export default function ChallanListPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-canvas/50 hover:bg-canvas/50 border-b-[0.5px] border-border/50">
-              <TableHead className="w-[120px] text-[12px] font-medium text-muted-foreground tracking-wider pl-5">Challan No.</TableHead>
-              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Date</TableHead>
-              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">Customer</TableHead>
-              <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider">Items</TableHead>
-              <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider">Total Amount</TableHead>
-              <TableHead className="w-[120px] text-center text-[12px] font-medium text-muted-foreground tracking-wider">Status</TableHead>
-              <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider pr-5">Actions</TableHead>
+              <TableHead className="w-[120px] text-[12px] font-medium text-muted-foreground tracking-wider pl-5">
+                Challan No.
+              </TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">
+                Date
+              </TableHead>
+              <TableHead className="text-[12px] font-medium text-muted-foreground tracking-wider">
+                Customer
+              </TableHead>
+              <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider">
+                Items
+              </TableHead>
+              <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider">
+                Total Amount
+              </TableHead>
+              <TableHead className="w-[120px] text-center text-[12px] font-medium text-muted-foreground tracking-wider">
+                Status
+              </TableHead>
+              <TableHead className="text-right text-[12px] font-medium text-muted-foreground tracking-wider pr-5">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i} className="border-b-[0.5px] border-border/50">
-                  <TableCell className="pl-5"><Skeleton className="h-4 w-20" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-                  <TableCell className="text-right"><Skeleton className="h-4 w-8 ml-auto" /></TableCell>
-                  <TableCell className="text-right"><Skeleton className="h-4 w-16 ml-auto" /></TableCell>
-                  <TableCell className="text-center"><Skeleton className="h-6 w-16 mx-auto" /></TableCell>
-                  <TableCell className="pr-5"><Skeleton className="h-8 w-16 ml-auto" /></TableCell>
+                  <TableCell className="pl-5">
+                    <Skeleton className="h-4 w-20" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-24" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-32" />
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Skeleton className="h-4 w-8 ml-auto" />
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Skeleton className="h-4 w-16 ml-auto" />
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Skeleton className="h-6 w-16 mx-auto" />
+                  </TableCell>
+                  <TableCell className="pr-5">
+                    <Skeleton className="h-8 w-16 ml-auto" />
+                  </TableCell>
                 </TableRow>
               ))
             ) : data?.data.length === 0 ? (
@@ -179,13 +218,21 @@ export default function ChallanListPage() {
                   colSpan={7}
                   className="text-center py-10 text-muted-foreground"
                 >
-                  <FileText className="h-10 w-10 mx-auto text-muted-foreground/30 mb-3" strokeWidth={1} />
-                  <span className="text-[13px] leading-tight">No challans found matching your criteria.</span>
+                  <FileText
+                    className="h-10 w-10 mx-auto text-muted-foreground/30 mb-3"
+                    strokeWidth={1}
+                  />
+                  <span className="text-[13px] leading-tight">
+                    No challans found matching your criteria.
+                  </span>
                 </TableCell>
               </TableRow>
             ) : (
               data?.data.map((challan) => (
-                <TableRow key={challan.id} className="hover:bg-canvas/50 transition-colors border-b-[0.5px] border-border/50">
+                <TableRow
+                  key={challan.id}
+                  className="hover:bg-canvas/50 transition-colors border-b-[0.5px] border-border/50"
+                >
                   <TableCell className="font-mono font-medium text-[13px] leading-tight pl-5">
                     {challan.challanNumber || (
                       <span className="text-muted-foreground text-xs italic">
@@ -217,7 +264,11 @@ export default function ChallanListPage() {
                   </TableCell>
                   <TableCell className="text-right pr-5">
                     <Link href={`/challans/${challan.id}`}>
-                      <Button variant="ghost" size="sm" className="rounded-[8px] h-8 text-[12px]">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="rounded-[8px] h-8 text-[12px]"
+                      >
                         View
                       </Button>
                     </Link>

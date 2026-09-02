@@ -8,7 +8,9 @@ export function FreeTierNotification() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      const isDismissed = sessionStorage.getItem("envault_hide_freetier_warning");
+      const isDismissed = sessionStorage.getItem(
+        "envault_hide_freetier_warning",
+      );
       if (!isDismissed) setIsVisible(true);
     }, 0);
     return () => clearTimeout(timer);
@@ -51,7 +53,9 @@ export function FreeTierNotification() {
             <div className="overflow-hidden">
               <div className="space-y-4 pt-3 opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100 group-hover:delay-150">
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  Render free tier instances spin down after inactivity. Initial API requests may take up to 50 seconds to respond as the instance wakes up.
+                  Render free tier instances spin down after inactivity. Initial
+                  API requests may take up to 50 seconds to respond as the
+                  instance wakes up.
                 </p>
               </div>
             </div>

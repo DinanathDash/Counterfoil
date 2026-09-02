@@ -5,8 +5,15 @@
  * the stock ledger are computed in seed/generate.ts. This file only resolves the
  * plan's catalog indexes into real UUIDs and writes rows.
  *
- *   npm run seed         additive-ish; fails on existing unique keys
+ *   npm run seed         no-op if the database already has data; only writes to an empty one
  *   npm run seed:reset   wipes transactional tables first (never in production)
+ *
+ * IMPORTANT: some deploy pipelines (this project's Render build included) run
+ * `npm run seed` automatically on every build. That is why a bare `npm run seed`
+ * refuses to write into a populated database instead of trying to be additive —
+ * an earlier version tried to be additive and silently duplicated every
+ * customer and note on the second run before crashing on a duplicate challan
+ * number. If you want fresh data, use `npm run seed:reset` explicitly.
  */
 // `prisma db seed` injects .env itself, but `npm run seed` runs tsx directly
 // and would otherwise start without DATABASE_URL.
@@ -49,11 +56,38 @@ async function reset() {
   await prisma.counter.deleteMany();
 }
 
+/**
+ * True if the database already has core data. A bare `npm run seed` bails out
+ * when this is true rather than trying to be additive — see the file header.
+ */
+async function alreadySeeded(): Promise<boolean> {
+  const [customers, products, challans] = await Promise.all([
+    prisma.customer.count(),
+    prisma.product.count(),
+    prisma.challan.count(),
+  ]);
+  return customers > 0 || products > 0 || challans > 0;
+}
+
 async function main() {
   const startedAt = Date.now();
   const now = new Date();
 
-  if (shouldReset) await reset();
+  if (shouldReset) {
+    await reset();
+  } else if (await alreadySeeded()) {
+    console.log(
+      [
+        'Database already has customers/products/challans — skipping (this is not an error).',
+        'Run `npm run seed:reset` to wipe and reseed.',
+        '',
+        'If a deploy pipeline is running `npm run seed` on every build, remove that step:',
+        'seeding a shared database automatically on every deploy is not safe, and this guard',
+        'only prevents a crash — it does not mean auto-seeding-on-deploy is a good idea.',
+      ].join('\n'),
+    );
+    return;
+  }
 
   const plan = generatePlan(catalog, now);
   assertPlanIsConsistent(plan);
@@ -98,22 +132,31 @@ async function main() {
   );
 
   // --- Customers -----------------------------------------------------------
+  // `Customer.mobile` is indexed but not `@unique` in the schema, so
+  // `skipDuplicates` has no DB constraint to key off and would silently insert
+  // every row again on a rerun. Filter against what already exists instead.
+  const existingMobiles = new Set(
+    (await prisma.customer.findMany({ select: { mobile: true } })).map((c) => c.mobile),
+  );
+
   await prisma.customer.createMany({
-    data: catalog.customers.map((c, i) => ({
-      name: c.name,
-      mobile: c.mobile,
-      email: c.email,
-      businessName: c.businessName,
-      gstNumber: c.gstNumber,
-      type: c.type,
-      address: c.address,
-      status: c.status,
-      followUpDate: plan.customers[i].followUpDate,
-      createdById: salesId,
-      createdAt: plan.customers[i].createdAt,
-      updatedAt: plan.customers[i].createdAt,
-    })),
-    skipDuplicates: true,
+    data: catalog.customers
+      .map((c, i) => ({ c, i }))
+      .filter(({ c }) => !existingMobiles.has(c.mobile))
+      .map(({ c, i }) => ({
+        name: c.name,
+        mobile: c.mobile,
+        email: c.email,
+        businessName: c.businessName,
+        gstNumber: c.gstNumber,
+        type: c.type,
+        address: c.address,
+        status: c.status,
+        followUpDate: plan.customers[i].followUpDate,
+        createdById: salesId,
+        createdAt: plan.customers[i].createdAt,
+        updatedAt: plan.customers[i].createdAt,
+      })),
   });
 
   const customerIdByMobile = new Map(

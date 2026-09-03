@@ -34,6 +34,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ArrowLeft, Edit, Trash2, CheckCircle2, Download } from "lucide-react";
+import { ChallanPrintView } from "@/features/challans/ChallanPrintView";
 
 export default function ChallanDetailPage() {
   const params = useParams();
@@ -147,15 +148,20 @@ export default function ChallanDetailPage() {
   };
 
   const handleDownloadPDF = async () => {
-    const element = document.getElementById("challan-document");
+    const element = document.getElementById("challan-print-document");
     if (!element) return;
 
     setIsDownloading(true);
     try {
-      const { toPng } = await import("html-to-image");
+      const { toJpeg } = await import("html-to-image");
       const jsPDF = (await import("jspdf")).default;
 
-      const dataUrl = await toPng(element, { pixelRatio: 2 });
+      // Use JPEG with compression to drastically reduce file size (from ~10MB down to <1MB)
+      const dataUrl = await toJpeg(element, { 
+        pixelRatio: 2,
+        quality: 0.8,
+        backgroundColor: "#ffffff"
+      });
 
       const pdf = new jsPDF({
         orientation: "portrait",
@@ -168,7 +174,7 @@ export default function ChallanDetailPage() {
       const elementHeight = element.offsetHeight;
       const pdfHeight = (elementHeight * pdfWidth) / elementWidth;
 
-      pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.addImage(dataUrl, "JPEG", 0, 0, pdfWidth, pdfHeight, undefined, "FAST");
       pdf.save(`challan-${challan?.challanNumber || "draft"}.pdf`);
     } catch (error) {
       console.error("Failed to generate PDF", error);
@@ -363,9 +369,12 @@ export default function ChallanDetailPage() {
               </p>
               <p className="text-[13px] leading-tight text-muted-foreground mt-1">
                 Date:{" "}
-                {challan.confirmedAt
-                  ? format(new Date(challan.confirmedAt), "dd MMM yyyy")
-                  : "Pending"}
+                {format(
+                  new Date(
+                    challan.confirmedAt || challan.cancelledAt || challan.createdAt
+                  ),
+                  "dd MMM yyyy"
+                )}
               </p>
             </div>
           </div>
@@ -507,6 +516,8 @@ export default function ChallanDetailPage() {
           </Button>
         )}
       </div>
+
+      <ChallanPrintView challan={challan} />
 
       <AlertDialog
         open={isConfirmDialogOpen}

@@ -12,11 +12,11 @@ By deeply linking sales to inventory, Counterfoil ensures stock integrity throug
 4. **Sales Challans**: Draft and confirm delivery notes. Confirmation triggers atomic stock deduction and locks the challan to ensure an immutable historical snapshot. Includes PDF export and print capabilities.
 5. **Dashboard**: A bird's-eye view aggregating metrics from all modules, complete with ECharts-powered visualizations and urgent-action lists.
 
-## Live Links (Placeholders)
+## Live Links
 
-- **Frontend URL**: [https://counterfoil-frontend.vercel.app](https://counterfoil-frontend.vercel.app)
-- **Backend Base URL**: [https://counterfoil-api.onrender.com/api](https://counterfoil-api.onrender.com/api)
-- **API Health Check**: [https://counterfoil-api.onrender.com/api/health](https://counterfoil-api.onrender.com/api/health)
+- **Frontend URL**: [https://counterfoil.dinanath.dev](https://counterfoil.dinanath.dev)
+- **Backend Base URL**: [https://api.counterfoil.dinanath.dev/api](https://api.counterfoil.dinanath.dev/api)
+- **API Health Check**: [https://api.counterfoil.dinanath.dev/api/health](https://api.counterfoil.dinanath.dev/api/health)
 
 _(Note: Render free tier instances spin down after inactivity. Initial API requests may take up to 50 seconds to respond as the instance wakes up)._
 

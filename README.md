@@ -9,8 +9,8 @@ By deeply linking sales to inventory, Counterfoil ensures stock integrity throug
 1. **Authentication & RBAC**: JWT-based login with distinct roles (ADMIN, SALES, WAREHOUSE, ACCOUNTS).
 2. **Customer CRM**: Manage customer details, business information, and track follow-up dates.
 3. **Products & Inventory**: Manage catalogs, minimum stock alerts, and view immutable stock movement logs.
-4. **Sales Challans**: Draft and confirm delivery notes. Confirmation triggers atomic stock deduction and locks the challan to ensure an immutable historical snapshot.
-5. **Dashboard**: A bird's-eye view aggregating metrics from all modules, complete with charts and urgent-action lists.
+4. **Sales Challans**: Draft and confirm delivery notes. Confirmation triggers atomic stock deduction and locks the challan to ensure an immutable historical snapshot. Includes PDF export and print capabilities.
+5. **Dashboard**: A bird's-eye view aggregating metrics from all modules, complete with ECharts-powered visualizations and urgent-action lists.
 
 ## Live Links (Placeholders)
 
@@ -33,8 +33,8 @@ Use these seeded accounts to log in and explore role-based restrictions. **Passw
 
 ## Tech Stack
 
-- **Frontend**: Next.js 14 (App Router), React, Tailwind CSS, Shadcn/UI, React-Hook-Form, Zod, Zustand, React-Query, Recharts.
-- **Backend**: Node.js, Express, TypeScript, Zod, Prisma ORM.
+- **Frontend**: Next.js 14 (App Router), React, Tailwind CSS, Shadcn/UI, React-Hook-Form, Zod, Zustand, React-Query, ECharts, jsPDF.
+- **Backend**: Node.js, Express, TypeScript, Zod, Prisma ORM, Configurable Seeder.
 - **Database**: PostgreSQL (Neon Serverless).
 - **Tooling**: Vitest, Supertest, ESLint, Prettier.
 

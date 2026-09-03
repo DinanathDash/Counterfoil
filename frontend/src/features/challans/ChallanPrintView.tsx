@@ -9,7 +9,7 @@ interface ChallanPrintViewProps {
 
 export function ChallanPrintView({ challan }: ChallanPrintViewProps) {
   const isDraft = challan.status === "DRAFT";
-  
+
   return (
     <div
       id="challan-print-document"
@@ -19,7 +19,8 @@ export function ChallanPrintView({ challan }: ChallanPrintViewProps) {
       <div className="border border-dashed border-slate-300 p-8 flex flex-col gap-8">
         {/* Header */}
         <div className="text-center font-bold text-blue-600">
-          [ {isDraft ? "Draft " : ""}Challan - ₹{parseFloat(challan.totalAmount).toFixed(2)} ]
+          [ {isDraft ? "Draft " : ""}Challan - ₹
+          {parseFloat(challan.totalAmount).toFixed(2)} ]
         </div>
 
         {/* Company & Meta */}
@@ -74,16 +75,32 @@ export function ChallanPrintView({ challan }: ChallanPrintViewProps) {
           </div>
           <div className="flex-1">
             <div className="text-slate-500 mb-2">[ Bill to ]</div>
-            <div className="font-bold mb-1">{challan.customerSnapshot?.name || "Unknown"}</div>
-            {challan.customerSnapshot?.businessName && <div>{challan.customerSnapshot.businessName}</div>}
-            {challan.customerSnapshot?.address && <div className="whitespace-pre-wrap">{challan.customerSnapshot.address}</div>}
-            {(challan.customerSnapshot?.mobile || challan.customerSnapshot?.email) && (
+            <div className="font-bold mb-1">
+              {challan.customerSnapshot?.name || "Unknown"}
+            </div>
+            {challan.customerSnapshot?.businessName && (
+              <div>{challan.customerSnapshot.businessName}</div>
+            )}
+            {challan.customerSnapshot?.address && (
+              <div className="whitespace-pre-wrap">
+                {challan.customerSnapshot.address}
+              </div>
+            )}
+            {(challan.customerSnapshot?.mobile ||
+              challan.customerSnapshot?.email) && (
               <div className="mt-1">
-                {[challan.customerSnapshot.mobile, challan.customerSnapshot.email].filter(Boolean).join(" • ")}
+                {[
+                  challan.customerSnapshot.mobile,
+                  challan.customerSnapshot.email,
+                ]
+                  .filter(Boolean)
+                  .join(" • ")}
               </div>
             )}
             {challan.customerSnapshot?.gstNumber && (
-              <div className="mt-1">GST: {challan.customerSnapshot.gstNumber}</div>
+              <div className="mt-1">
+                GST: {challan.customerSnapshot.gstNumber}
+              </div>
             )}
           </div>
         </div>
@@ -100,7 +117,7 @@ export function ChallanPrintView({ challan }: ChallanPrintViewProps) {
             <div className="w-24 text-right">Amount</div>
           </div>
           <div className="border-t border-dashed border-slate-300 mb-4" />
-          
+
           <div className="flex flex-col gap-4">
             {challan.items?.map((item) => (
               <div key={item.id} className="flex">
@@ -109,8 +126,12 @@ export function ChallanPrintView({ challan }: ChallanPrintViewProps) {
                   <div className="text-slate-500">SKU: {item.sku}</div>
                 </div>
                 <div className="w-16 text-right">{item.quantity}</div>
-                <div className="w-24 text-right">₹{parseFloat(item.unitPrice).toFixed(2)}</div>
-                <div className="w-24 text-right">₹{parseFloat(item.lineTotal).toFixed(2)}</div>
+                <div className="w-24 text-right">
+                  ₹{parseFloat(item.unitPrice).toFixed(2)}
+                </div>
+                <div className="w-24 text-right">
+                  ₹{parseFloat(item.lineTotal).toFixed(2)}
+                </div>
               </div>
             ))}
           </div>

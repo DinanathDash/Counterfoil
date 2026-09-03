@@ -157,10 +157,10 @@ export default function ChallanDetailPage() {
       const jsPDF = (await import("jspdf")).default;
 
       // Use JPEG with compression to drastically reduce file size (from ~10MB down to <1MB)
-      const dataUrl = await toJpeg(element, { 
+      const dataUrl = await toJpeg(element, {
         pixelRatio: 2,
         quality: 0.8,
-        backgroundColor: "#ffffff"
+        backgroundColor: "#ffffff",
       });
 
       const pdf = new jsPDF({
@@ -174,7 +174,16 @@ export default function ChallanDetailPage() {
       const elementHeight = element.offsetHeight;
       const pdfHeight = (elementHeight * pdfWidth) / elementWidth;
 
-      pdf.addImage(dataUrl, "JPEG", 0, 0, pdfWidth, pdfHeight, undefined, "FAST");
+      pdf.addImage(
+        dataUrl,
+        "JPEG",
+        0,
+        0,
+        pdfWidth,
+        pdfHeight,
+        undefined,
+        "FAST",
+      );
       pdf.save(`challan-${challan?.challanNumber || "draft"}.pdf`);
     } catch (error) {
       console.error("Failed to generate PDF", error);
@@ -371,9 +380,11 @@ export default function ChallanDetailPage() {
                 Date:{" "}
                 {format(
                   new Date(
-                    challan.confirmedAt || challan.cancelledAt || challan.createdAt
+                    challan.confirmedAt ||
+                      challan.cancelledAt ||
+                      challan.createdAt,
                   ),
-                  "dd MMM yyyy"
+                  "dd MMM yyyy",
                 )}
               </p>
             </div>

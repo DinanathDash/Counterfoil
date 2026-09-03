@@ -24,12 +24,12 @@ _(Note: Render free tier instances spin down after inactivity. Initial API reque
 
 Use these seeded accounts to log in and explore role-based restrictions. **Password for all accounts is `Password@123`.**
 
-| Role      | Email                |
-| --------- | -------------------- |
-| Admin     | `admin@erp.test`     |
-| Sales     | `sales@erp.test`     |
-| Warehouse | `warehouse@erp.test` |
-| Accounts  | `accounts@erp.test`  |
+| Role      | Email                               |
+| --------- | ----------------------------------- |
+| Admin     | `aarti.admin@counterfoil.test`      |
+| Sales     | `nikhil.sales@counterfoil.test`     |
+| Warehouse | `suresh.warehouse@counterfoil.test` |
+| Accounts  | `meera.accounts@counterfoil.test`   |
 
 ## Tech Stack
 

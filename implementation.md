@@ -850,10 +850,10 @@ Password for every seeded account: `Password@123`. Put this table in the README 
 
 | Role      | Email                |
 | --------- | -------------------- |
-| Admin     | `admin@erp.test`     |
-| Sales     | `sales@erp.test`     |
-| Warehouse | `warehouse@erp.test` |
-| Accounts  | `accounts@erp.test`  |
+| Admin     | `aarti.admin@counterfoil.test`     |
+| Sales     | `nikhil.sales@counterfoil.test`     |
+| Warehouse | `suresh.warehouse@counterfoil.test` |
+| Accounts  | `meera.accounts@counterfoil.test`  |
 
 Also seed: 8 products across 3 categories (two of them below `minStockAlert` so the low-stock view is not empty), 6 customers spanning all three types and all three statuses (two with follow-up dates in the next 7 days), 1 CONFIRMED challan with its `OUT` movements and 1 DRAFT challan. Make the seed idempotent with `upsert` on `email`/`sku` so it can be re-run safely.
 

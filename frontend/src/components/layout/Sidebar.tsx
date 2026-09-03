@@ -127,13 +127,9 @@ const bottomLinks = [
   { title: "Support", href: "#", icon: Headphones, isDummy: true },
 ];
 
-const getAvatarForEmail = (email?: string) => {
-  if (!email) return "52";
-  if (email.includes("admin")) return "11";
-  if (email.includes("sales")) return "33";
-  if (email.includes("warehouse")) return "44";
-  if (email.includes("accounts")) return "68";
-  return "52";
+const getAvatarUrl = (name?: string, email?: string) => {
+  const identifier = name || (email ? email.split(".")[0] : "User");
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(identifier)}&background=random`;
 };
 
 const SidebarTooltip = ({
@@ -428,7 +424,7 @@ export function Sidebar() {
           <div className="flex items-center gap-3">
             <div className="relative shrink-0">
               <Image
-                src={`https://i.pravatar.cc/150?img=${getAvatarForEmail(user?.email)}`}
+                src={getAvatarUrl(user?.name, user?.email)}
                 alt="User"
                 width={36}
                 height={36}

@@ -62,7 +62,8 @@ export default function ChallanDetailPage() {
     queryClient
       .query({
         queryKey: ["customers", { limit: 1000 }],
-        queryFn: () => customersApi.getCustomers({ limit: 1000, status: "ACTIVE" }),
+        queryFn: () =>
+          customersApi.getCustomers({ limit: 1000, status: "ACTIVE" }),
       })
       .catch(() => {});
     queryClient
@@ -286,15 +287,12 @@ export default function ChallanDetailPage() {
               Challan{" "}
               {challan.challanNumber ? `#${challan.challanNumber}` : "(Draft)"}
               {isDraft && (
-                <Badge variant="secondary" className="rounded-[6px]">
+                <Badge variant="neutral" className="rounded-[6px]">
                   Draft
                 </Badge>
               )}
               {isConfirmed && (
-                <Badge
-                  variant="default"
-                  className="bg-emerald-600 hover:bg-emerald-700 rounded-[6px]"
-                >
+                <Badge variant="success" className="rounded-[6px]">
                   Confirmed
                 </Badge>
               )}
@@ -310,11 +308,13 @@ export default function ChallanDetailPage() {
             </p>
           </div>
         </div>
-
       </div>
 
       {/* Snapshot Document */}
-      <Card id="challan-document" className="overflow-hidden rounded-2xl border-[0.5px] border-border/50 shadow-sm bg-card">
+      <Card
+        id="challan-document"
+        className="overflow-hidden rounded-2xl border-[0.5px] border-border/50 shadow-sm bg-card"
+      >
         <div className="bg-muted/30 p-6 md:p-10 border-b-[0.5px] border-border/50">
           <div className="flex justify-between items-start">
             <div>
@@ -327,6 +327,30 @@ export default function ChallanDetailPage() {
               {challan.customerSnapshot?.businessName && (
                 <p className="text-[13px] leading-tight text-muted-foreground">
                   {challan.customerSnapshot.businessName}
+                </p>
+              )}
+              {challan.customerSnapshot?.address && (
+                <p className="text-[13px] leading-tight text-muted-foreground mt-1 whitespace-pre-wrap">
+                  {challan.customerSnapshot.address}
+                </p>
+              )}
+              {(challan.customerSnapshot?.mobile ||
+                challan.customerSnapshot?.email) && (
+                <p className="text-[13px] leading-tight text-muted-foreground mt-1">
+                  {[
+                    challan.customerSnapshot.mobile,
+                    challan.customerSnapshot.email,
+                  ]
+                    .filter(Boolean)
+                    .join(" • ")}
+                </p>
+              )}
+              {challan.customerSnapshot?.gstNumber && (
+                <p className="text-[13px] leading-tight text-muted-foreground mt-1">
+                  GST:{" "}
+                  <span className="font-mono">
+                    {challan.customerSnapshot.gstNumber}
+                  </span>
                 </p>
               )}
             </div>

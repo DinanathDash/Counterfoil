@@ -29,7 +29,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"admin@erp.test\",\n    \"password\": \"Password@123\"\n}",
+              "raw": "{\n    \"email\": \"aarti.admin@counterfoil.test\",\n    \"password\": \"Password@123\"\n}",
               "options": {
                 "raw": {
                   "language": "json"

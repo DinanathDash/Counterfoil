@@ -84,7 +84,7 @@ export function ChallanForm({ initialData, isEdit }: ChallanFormProps) {
   // Fetch customers (active ones ideally, but let's get all for now, could filter to ACTIVE later)
   const { data: customersData, isLoading: customersLoading } = useQuery({
     queryKey: ["customers", { limit: 1000 }],
-    queryFn: () => customersApi.getCustomers({ limit: 1000, status: "ACTIVE" }),
+    queryFn: () => customersApi.getCustomers({ limit: 1000 }),
   });
   const customers = customersData?.data || [];
 
@@ -548,12 +548,24 @@ export function ChallanFormSkeleton({ rowCount = 3 }: { rowCount?: number }) {
               <TableBody>
                 {Array.from({ length: rowCount }).map((_, i) => (
                   <TableRow key={i}>
-                    <TableCell><Skeleton className="h-9 w-full" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-8" /></TableCell>
-                    <TableCell><Skeleton className="h-9 w-full" /></TableCell>
-                    <TableCell><Skeleton className="h-9 w-full" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                    <TableCell><Skeleton className="h-8 w-8" /></TableCell>
+                    <TableCell>
+                      <Skeleton className="h-9 w-full" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-8" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-9 w-full" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-9 w-full" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-16" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-8 w-8" />
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

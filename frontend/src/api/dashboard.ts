@@ -14,8 +14,15 @@ export interface DashboardSummary {
   challans: {
     draft: number;
     confirmed: number;
+    cancelled: number;
     todayCount: number;
   };
+  monthlyChallans: {
+    month: string;
+    draft: number;
+    confirmed: number;
+    cancelled: number;
+  }[];
   lowStockItems: Product[];
   followUpsDue: Customer[];
 }

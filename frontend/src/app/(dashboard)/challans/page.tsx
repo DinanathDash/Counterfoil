@@ -43,7 +43,10 @@ export default function ChallanListPage() {
   // data instead of showing its loading skeleton.
   const prefetchChallan = (id: string) => {
     queryClient
-      .query({ queryKey: ["challan", id], queryFn: () => challansApi.getChallan(id) })
+      .query({
+        queryKey: ["challan", id],
+        queryFn: () => challansApi.getChallan(id),
+      })
       .catch(() => {});
   };
 
@@ -78,19 +81,13 @@ export default function ChallanListPage() {
     switch (status) {
       case "DRAFT":
         return (
-          <Badge
-            variant="secondary"
-            className="bg-gray-100 text-gray-800 hover:bg-gray-100 rounded-[6px]"
-          >
+          <Badge variant="neutral" className="rounded-[6px]">
             Draft
           </Badge>
         );
       case "CONFIRMED":
         return (
-          <Badge
-            variant="default"
-            className="bg-emerald-600 hover:bg-emerald-700 rounded-[6px]"
-          >
+          <Badge variant="success" className="rounded-[6px]">
             Confirmed
           </Badge>
         );

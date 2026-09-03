@@ -3,7 +3,10 @@
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { challansApi } from "@/api/challans";
-import { ChallanForm, ChallanFormSkeleton } from "@/features/challans/ChallanForm";
+import {
+  ChallanForm,
+  ChallanFormSkeleton,
+} from "@/features/challans/ChallanForm";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";

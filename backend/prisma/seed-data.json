@@ -2,15 +2,30 @@
   "_readme": "Editable catalog for the seeder. Volume and relationships live in seed/generate.ts; this file only holds flat, human-editable content. followUpOffsetDays is relative to the seed run date: negative = overdue, 0 = due today, positive = upcoming, null = no follow-up.",
 
   "users": [
-    { "key": "admin", "email": "admin@erp.test", "name": "Aarti Deshpande", "role": "ADMIN" },
-    { "key": "sales", "email": "sales@erp.test", "name": "Nikhil Verma", "role": "SALES" },
+    {
+      "key": "admin",
+      "email": "aarti.admin@counterfoil.test",
+      "name": "Aarti Deshpande",
+      "role": "ADMIN"
+    },
+    {
+      "key": "sales",
+      "email": "nikhil.sales@counterfoil.test",
+      "name": "Nikhil Verma",
+      "role": "SALES"
+    },
     {
       "key": "warehouse",
-      "email": "warehouse@erp.test",
+      "email": "suresh.warehouse@counterfoil.test",
       "name": "Suresh Pawar",
       "role": "WAREHOUSE"
     },
-    { "key": "accounts", "email": "accounts@erp.test", "name": "Meera Iyer", "role": "ACCOUNTS" }
+    {
+      "key": "accounts",
+      "email": "meera.accounts@counterfoil.test",
+      "name": "Meera Iyer",
+      "role": "ACCOUNTS"
+    }
   ],
 
   "products": [

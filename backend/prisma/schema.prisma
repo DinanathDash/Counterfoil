@@ -64,6 +64,8 @@ model Customer {
   gstNumber    String?
   type         CustomerType   @default(RETAIL)
   address      String?
+  creditLimit  Decimal        @default(0) @db.Decimal(14, 2)
+  balance      Decimal        @default(0) @db.Decimal(14, 2)
   status       CustomerStatus @default(LEAD)
   followUpDate DateTime?
   notes        String?

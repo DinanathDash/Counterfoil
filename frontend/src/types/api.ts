@@ -111,7 +111,8 @@ export interface StockMovement {
   quantity: number;
   balanceAfter: number;
   reason: string;
-  challanId: string | null;
+  referenceId: string | null;
+  referenceType: string | null;
   createdById: string;
   createdAt: string;
   createdBy: { name: string; email: string };

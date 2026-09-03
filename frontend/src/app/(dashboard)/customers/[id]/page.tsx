@@ -151,16 +151,27 @@ export default function CustomerDetailPage() {
           <Badge
             variant={
               customer.status === "ACTIVE"
-                ? "default"
+                ? "success"
                 : customer.status === "LEAD"
-                  ? "secondary"
-                  : "outline"
+                  ? "warning"
+                  : "neutral"
             }
             className="rounded-[6px]"
           >
             {customer.status}
           </Badge>
-          <Badge variant="outline" className="bg-canvas rounded-[6px]">
+          <Badge
+            variant={
+              customer.type === "RETAIL"
+                ? "info"
+                : customer.type === "WHOLESALE"
+                  ? "purple"
+                  : customer.type === "DISTRIBUTOR"
+                    ? "warning"
+                    : "neutral"
+            }
+            className="rounded-[6px]"
+          >
             {customer.type}
           </Badge>
         </div>
@@ -268,8 +279,14 @@ export default function CustomerDetailPage() {
                           {challan.challanNumber || "Draft"}
                         </Link>
                         <Badge
-                          variant="outline"
-                          className="text-[10px] uppercase py-0 rounded-[6px] border-[0.5px]"
+                          variant={
+                            challan.status === "CONFIRMED"
+                              ? "success"
+                              : challan.status === "DRAFT"
+                                ? "neutral"
+                                : "destructive"
+                          }
+                          className="text-[10px] uppercase py-0 rounded-[6px]"
                         >
                           {challan.status}
                         </Badge>

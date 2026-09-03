@@ -339,7 +339,17 @@ export default function ProductDetailPage() {
                           className="text-[13px] leading-tight max-w-[150px] truncate"
                           title={movement.reason}
                         >
-                          {movement.reason}
+                          {movement.referenceType === "CHALLAN" &&
+                          movement.referenceId ? (
+                            <Link
+                              href={`/challans/${movement.referenceId}`}
+                              className="text-primary hover:underline hover:text-primary/80"
+                            >
+                              {movement.reason}
+                            </Link>
+                          ) : (
+                            movement.reason
+                          )}
                         </TableCell>
                         <TableCell className="text-[13px] leading-tight text-muted-foreground pr-5">
                           {movement.createdBy?.name || "System"}

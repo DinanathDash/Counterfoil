@@ -54,6 +54,7 @@ async function reset() {
   await prisma.customer.deleteMany();
   await prisma.product.deleteMany();
   await prisma.counter.deleteMany();
+  await prisma.user.deleteMany();
 }
 
 /**
@@ -143,20 +144,30 @@ async function main() {
     data: catalog.customers
       .map((c, i) => ({ c, i }))
       .filter(({ c }) => !existingMobiles.has(c.mobile))
-      .map(({ c, i }) => ({
-        name: c.name,
-        mobile: c.mobile,
-        email: c.email,
-        businessName: c.businessName,
-        gstNumber: c.gstNumber,
-        type: c.type,
-        address: c.address,
-        status: c.status,
-        followUpDate: plan.customers[i].followUpDate,
-        createdById: salesId,
-        createdAt: plan.customers[i].createdAt,
-        updatedAt: plan.customers[i].createdAt,
-      })),
+      .map(({ c, i }) => {
+        const customerChallans = plan.challans.filter(
+          (ch) => ch.customerIndex === i && ch.status === 'CONFIRMED',
+        );
+        const balance = customerChallans.reduce((sum, ch) => sum + ch.totalAmount, 0);
+        const creditLimit = Math.max(100000, balance * 2);
+
+        return {
+          name: c.name,
+          mobile: c.mobile,
+          email: c.email,
+          businessName: c.businessName,
+          gstNumber: c.gstNumber,
+          type: c.type,
+          address: c.address,
+          status: c.status,
+          creditLimit: decimal(creditLimit),
+          balance: decimal(balance),
+          followUpDate: plan.customers[i].followUpDate,
+          createdById: salesId,
+          createdAt: plan.customers[i].createdAt,
+          updatedAt: plan.customers[i].createdAt,
+        };
+      }),
   });
 
   const customerIdByMobile = new Map(

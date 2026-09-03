@@ -10,6 +10,7 @@ import { ProductFormModal } from "@/features/products/ProductFormModal";
 import { StockAdjustModal } from "@/features/products/StockAdjustModal";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { toast } from "@/components/ui/toast";
 
 import { Input } from "@/components/ui/input";
@@ -64,7 +65,10 @@ export default function ProductListPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearch = useDebounce(searchTerm, 350);
 
-  const [lowStockOnly, setLowStockOnly] = useState(false);
+  const searchParams = useSearchParams();
+  const [lowStockOnly, setLowStockOnly] = useState(
+    searchParams.get("lowStock") === "true",
+  );
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isAdjustOpen, setIsAdjustOpen] = useState(false);

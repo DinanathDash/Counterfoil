@@ -34,6 +34,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ArrowLeft, Edit, Trash2, CheckCircle2, Download } from "lucide-react";
+import { ChallanPrintView } from "@/features/challans/ChallanPrintView";
 
 export default function ChallanDetailPage() {
   const params = useParams();
@@ -62,7 +63,8 @@ export default function ChallanDetailPage() {
     queryClient
       .query({
         queryKey: ["customers", { limit: 1000 }],
-        queryFn: () => customersApi.getCustomers({ limit: 1000, status: "ACTIVE" }),
+        queryFn: () =>
+          customersApi.getCustomers({ limit: 1000, status: "ACTIVE" }),
       })
       .catch(() => {});
     queryClient
@@ -146,15 +148,20 @@ export default function ChallanDetailPage() {
   };
 
   const handleDownloadPDF = async () => {
-    const element = document.getElementById("challan-document");
+    const element = document.getElementById("challan-print-document");
     if (!element) return;
 
     setIsDownloading(true);
     try {
-      const { toPng } = await import("html-to-image");
+      const { toJpeg } = await import("html-to-image");
       const jsPDF = (await import("jspdf")).default;
 
-      const dataUrl = await toPng(element, { pixelRatio: 2 });
+      // Use JPEG with compression to drastically reduce file size (from ~10MB down to <1MB)
+      const dataUrl = await toJpeg(element, {
+        pixelRatio: 2,
+        quality: 0.8,
+        backgroundColor: "#ffffff",
+      });
 
       const pdf = new jsPDF({
         orientation: "portrait",
@@ -167,7 +174,16 @@ export default function ChallanDetailPage() {
       const elementHeight = element.offsetHeight;
       const pdfHeight = (elementHeight * pdfWidth) / elementWidth;
 
-      pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.addImage(
+        dataUrl,
+        "JPEG",
+        0,
+        0,
+        pdfWidth,
+        pdfHeight,
+        undefined,
+        "FAST",
+      );
       pdf.save(`challan-${challan?.challanNumber || "draft"}.pdf`);
     } catch (error) {
       console.error("Failed to generate PDF", error);
@@ -286,15 +302,12 @@ export default function ChallanDetailPage() {
               Challan{" "}
               {challan.challanNumber ? `#${challan.challanNumber}` : "(Draft)"}
               {isDraft && (
-                <Badge variant="secondary" className="rounded-[6px]">
+                <Badge variant="neutral" className="rounded-[6px]">
                   Draft
                 </Badge>
               )}
               {isConfirmed && (
-                <Badge
-                  variant="default"
-                  className="bg-emerald-600 hover:bg-emerald-700 rounded-[6px]"
-                >
+                <Badge variant="success" className="rounded-[6px]">
                   Confirmed
                 </Badge>
               )}
@@ -310,11 +323,13 @@ export default function ChallanDetailPage() {
             </p>
           </div>
         </div>
-
       </div>
 
       {/* Snapshot Document */}
-      <Card id="challan-document" className="overflow-hidden rounded-2xl border-[0.5px] border-border/50 shadow-sm bg-card">
+      <Card
+        id="challan-document"
+        className="overflow-hidden rounded-2xl border-[0.5px] border-border/50 shadow-sm bg-card"
+      >
         <div className="bg-muted/30 p-6 md:p-10 border-b-[0.5px] border-border/50">
           <div className="flex justify-between items-start">
             <div>
@@ -329,6 +344,30 @@ export default function ChallanDetailPage() {
                   {challan.customerSnapshot.businessName}
                 </p>
               )}
+              {challan.customerSnapshot?.address && (
+                <p className="text-[13px] leading-tight text-muted-foreground mt-1 whitespace-pre-wrap">
+                  {challan.customerSnapshot.address}
+                </p>
+              )}
+              {(challan.customerSnapshot?.mobile ||
+                challan.customerSnapshot?.email) && (
+                <p className="text-[13px] leading-tight text-muted-foreground mt-1">
+                  {[
+                    challan.customerSnapshot.mobile,
+                    challan.customerSnapshot.email,
+                  ]
+                    .filter(Boolean)
+                    .join(" • ")}
+                </p>
+              )}
+              {challan.customerSnapshot?.gstNumber && (
+                <p className="text-[13px] leading-tight text-muted-foreground mt-1">
+                  GST:{" "}
+                  <span className="font-mono">
+                    {challan.customerSnapshot.gstNumber}
+                  </span>
+                </p>
+              )}
             </div>
             <div className="text-right">
               <h2 className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider mb-2">
@@ -339,9 +378,14 @@ export default function ChallanDetailPage() {
               </p>
               <p className="text-[13px] leading-tight text-muted-foreground mt-1">
                 Date:{" "}
-                {challan.confirmedAt
-                  ? format(new Date(challan.confirmedAt), "dd MMM yyyy")
-                  : "Pending"}
+                {format(
+                  new Date(
+                    challan.confirmedAt ||
+                      challan.cancelledAt ||
+                      challan.createdAt,
+                  ),
+                  "dd MMM yyyy",
+                )}
               </p>
             </div>
           </div>
@@ -483,6 +527,8 @@ export default function ChallanDetailPage() {
           </Button>
         )}
       </div>
+
+      <ChallanPrintView challan={challan} />
 
       <AlertDialog
         open={isConfirmDialogOpen}

@@ -333,17 +333,30 @@ export default function CustomersPage() {
                       {customer.mobile}
                     </div>
                   </TableCell>
-                  <TableCell className="text-[13px] leading-tight">
-                    {customer.type}
+                  <TableCell>
+                    <Badge
+                      variant={
+                        customer.type === "RETAIL"
+                          ? "info"
+                          : customer.type === "WHOLESALE"
+                            ? "purple"
+                            : customer.type === "DISTRIBUTOR"
+                              ? "warning"
+                              : "neutral"
+                      }
+                      className="rounded-[6px] text-[10px] uppercase py-0"
+                    >
+                      {customer.type}
+                    </Badge>
                   </TableCell>
                   <TableCell>
                     <Badge
                       variant={
                         customer.status === "ACTIVE"
-                          ? "default"
+                          ? "success"
                           : customer.status === "LEAD"
-                            ? "secondary"
-                            : "outline"
+                            ? "warning"
+                            : "neutral"
                       }
                       className="rounded-[6px]"
                     >

@@ -22,6 +22,14 @@ import {
 import Link from "next/link";
 import { format } from "date-fns";
 import ReactECharts from "echarts-for-react";
+import {
+  EChartsBarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+} from "@/components/evilcharts/charts/echarts-bar-chart";
 
 export default function DashboardPage() {
   const { data, isLoading, isError } = useQuery({
@@ -63,46 +71,36 @@ export default function DashboardPage() {
   const inactiveCustomers =
     customers.total - (customers.active + customers.lead);
 
-  const challanChartOption = {
-    tooltip: { trigger: "item" },
-    grid: {
-      left: "0%",
-      right: "0%",
-      bottom: "0%",
-      top: "10%",
-      containLabel: true,
+  const challanChartConfig = {
+    draft: {
+      label: "Draft",
+      colors: { light: ["#3b82f6"], dark: ["#3b82f6"] },
     },
-    xAxis: {
-      type: "category",
-      data: ["Draft", "Confirmed"],
-      axisLine: { show: false },
-      axisTick: { show: false },
+    confirmed: {
+      label: "Confirmed",
+      colors: { light: ["#10b981"], dark: ["#10b981"] },
     },
-    yAxis: { type: "value", show: false },
-    series: [
-      {
-        data: [
-          {
-            value: challans.draft,
-            itemStyle: { color: "#3b82f6", borderRadius: [4, 4, 0, 0] },
-          },
-          {
-            value: challans.confirmed,
-            itemStyle: { color: "#10b981", borderRadius: [4, 4, 0, 0] },
-          },
-        ],
-        type: "bar",
-        barWidth: "40%",
-      },
-    ],
+    cancelled: {
+      label: "Cancelled",
+      colors: { light: ["#ef4444"], dark: ["#ef4444"] },
+    },
   };
 
   const customerChartOption = {
     tooltip: { trigger: "item" },
+    legend: {
+      bottom: 0,
+      left: "center",
+      itemWidth: 10,
+      itemHeight: 10,
+      textStyle: { color: "#64748b", fontSize: 12 },
+      icon: "circle",
+    },
     series: [
       {
         type: "pie",
-        radius: ["60%", "90%"],
+        radius: ["55%", "85%"],
+        center: ["50%", "45%"],
         itemStyle: {
           borderRadius: 8,
           borderColor: "#fff",
@@ -217,10 +215,20 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent className="px-5 pb-5">
             <div className="h-[250px] w-full">
-              <ReactECharts
-                option={challanChartOption}
-                style={{ height: "100%", width: "100%" }}
-              />
+              <EChartsBarChart
+                className="h-full w-full"
+                data={data.monthlyChallans}
+                config={challanChartConfig}
+                xDataKey="month"
+              >
+                <XAxis />
+                <YAxis hideDots />
+                <Tooltip />
+                <Legend verticalAlign="bottom" />
+                <Bar dataKey="draft" />
+                <Bar dataKey="confirmed" />
+                <Bar dataKey="cancelled" />
+              </EChartsBarChart>
             </div>
           </CardContent>
         </Card>
@@ -248,13 +256,26 @@ export default function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-2">
         {/* Actionable Lists */}
         <Card className="flex flex-col bg-card shadow-sm border-[0.5px] border-border/50 rounded-2xl">
-          <CardHeader className="px-5 pt-5 pb-2">
-            <CardTitle className="flex items-center text-destructive text-[12px] font-medium">
-              <AlertTriangle className="mr-2 h-4 w-4" /> Low stock items
-            </CardTitle>
-            <CardDescription className="text-[13px] leading-tight">
-              Products at or below their minimum stock threshold.
-            </CardDescription>
+          <CardHeader className="flex flex-row items-start justify-between px-5 pt-5 pb-2 space-y-0">
+            <div className="space-y-1">
+              <CardTitle className="flex items-center text-destructive text-[12px] font-medium">
+                <AlertTriangle className="mr-2 h-4 w-4" /> Low stock items
+              </CardTitle>
+              <CardDescription className="text-[13px] leading-tight">
+                Products at or below their minimum stock threshold.
+              </CardDescription>
+            </div>
+            {lowStockItems.length > 5 && (
+              <Link href="/products?lowStock=true" className="shrink-0 ml-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-2 text-xs text-primary hover:text-primary/80 hover:bg-primary/10"
+                >
+                  View All ({lowStockItems.length})
+                </Button>
+              </Link>
+            )}
           </CardHeader>
           <CardContent className="flex-1 px-5 pb-5">
             {lowStockItems.length === 0 ? (
@@ -290,19 +311,6 @@ export default function DashboardPage() {
               </div>
             )}
           </CardContent>
-          {lowStockItems.length > 5 && (
-            <div className="p-4 border-t-[0.5px] border-border/50 text-center mt-auto rounded-b-2xl">
-              <Link href="/products?lowStock=true">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full text-primary hover:text-primary/80"
-                >
-                  View All ({lowStockItems.length})
-                </Button>
-              </Link>
-            </div>
-          )}
         </Card>
 
         <Card className="flex flex-col bg-card shadow-sm border-[0.5px] border-border/50 rounded-2xl">
